@@ -14,40 +14,64 @@ import {
   Calendar,
   MessageSquare,
   Paperclip,
-  Clock
+  Clock,
+  AlertCircle,
+  CheckCircle,
+  Circle,
+  Flag,
+  Users,
+  TrendingUp,
+  Grid3X3,
+  List,
+  Eye
 } from "lucide-react"
 
-// Mock data for projects
+// Enhanced column data with better visual indicators
 const columns = [
   {
     id: "backlog",
     title: "Backlog",
     count: 4,
-    color: "bg-gray-500"
+    color: "bg-slate-500",
+    gradient: "from-slate-500 to-slate-600",
+    icon: Circle,
+    description: "Ideas and future tasks"
   },
   {
     id: "todo",
     title: "To Do",
     count: 3,
-    color: "bg-blue-500"
+    color: "bg-blue-500",
+    gradient: "from-blue-500 to-blue-600",
+    icon: Clock,
+    description: "Ready to start"
   },
   {
     id: "in-progress",
     title: "In Progress",
     count: 5,
-    color: "bg-yellow-500"
+    color: "bg-amber-500",
+    gradient: "from-amber-500 to-orange-500",
+    icon: TrendingUp,
+    description: "Currently working on"
   },
   {
     id: "review",
     title: "In Review",
     count: 2,
-    color: "bg-purple-500"
+    color: "bg-purple-500",
+    gradient: "from-purple-500 to-violet-600",
+    icon: Eye,
+    description: "Awaiting feedback"
   },
   {
     id: "done",
     title: "Done",
     count: 8,
-    color: "bg-green-500"
+    color: "bg-emerald-500",
+    gradient: "from-emerald-500 to-green-600",
+    icon: CheckCircle,
+    description: "Completed tasks"
   }
 ]
 
@@ -56,227 +80,291 @@ const tasks = {
     {
       id: "1",
       title: "User Authentication System",
-      description: "Implement secure login and registration functionality",
+      description: "Implement secure login and registration functionality with OAuth integration",
       priority: "High",
       assignees: [
-        { name: "Alice", avatar: "/api/placeholder/32/32" },
-        { name: "Bob", avatar: "/api/placeholder/32/32" }
+        { name: "Alice Johnson", avatar: "/api/placeholder/32/32", role: "Backend Dev" },
+        { name: "Bob Smith", avatar: "/api/placeholder/32/32", role: "Security" }
       ],
       dueDate: "Mar 28",
       comments: 5,
       attachments: 2,
-      tags: ["Backend", "Security"]
+      tags: ["Backend", "Security", "OAuth"],
+      progress: 0,
+      timeEstimate: "2 weeks",
+      isBlocked: false,
+      storyPoints: 8
     },
     {
       id: "2",
       title: "Mobile Responsive Design",
-      description: "Make the dashboard responsive for mobile devices",
+      description: "Make the dashboard responsive for mobile devices and tablets",
       priority: "Medium",
       assignees: [
-        { name: "Charlie", avatar: "/api/placeholder/32/32" }
+        { name: "Charlie Brown", avatar: "/api/placeholder/32/32", role: "Frontend Dev" }
       ],
       dueDate: "Apr 2",
       comments: 3,
       attachments: 0,
-      tags: ["Frontend", "Design"]
+      tags: ["Frontend", "Design", "Mobile"],
+      progress: 0,
+      timeEstimate: "1 week",
+      isBlocked: false,
+      storyPoints: 5
     },
     {
       id: "3",
       title: "API Documentation",
-      description: "Create comprehensive API documentation",
+      description: "Create comprehensive API documentation with interactive examples",
       priority: "Low",
       assignees: [
-        { name: "Diana", avatar: "/api/placeholder/32/32" },
-        { name: "Eve", avatar: "/api/placeholder/32/32" }
+        { name: "Diana Prince", avatar: "/api/placeholder/32/32", role: "Tech Writer" },
+        { name: "Eve Wilson", avatar: "/api/placeholder/32/32", role: "DevRel" }
       ],
       dueDate: "Apr 5",
       comments: 1,
       attachments: 1,
-      tags: ["Documentation"]
+      tags: ["Documentation", "API"],
+      progress: 0,
+      timeEstimate: "3 days",
+      isBlocked: false,
+      storyPoints: 3
     },
     {
       id: "4",
       title: "Database Optimization",
-      description: "Optimize database queries for better performance",
+      description: "Optimize database queries for better performance and scalability",
       priority: "High",
       assignees: [
-        { name: "Frank", avatar: "/api/placeholder/32/32" }
+        { name: "Frank Miller", avatar: "/api/placeholder/32/32", role: "Database Admin" }
       ],
       dueDate: "Mar 30",
       comments: 8,
       attachments: 0,
-      tags: ["Backend", "Performance"]
+      tags: ["Backend", "Performance", "Database"],
+      progress: 0,
+      timeEstimate: "5 days",
+      isBlocked: true,
+      storyPoints: 13
     }
   ],
   todo: [
     {
       id: "5",
       title: "Payment Gateway Integration",
-      description: "Integrate Stripe payment processing",
+      description: "Integrate Stripe payment processing with webhook handling",
       priority: "High",
       assignees: [
-        { name: "Grace", avatar: "/api/placeholder/32/32" },
-        { name: "Henry", avatar: "/api/placeholder/32/32" }
+        { name: "Grace Lee", avatar: "/api/placeholder/32/32", role: "Backend Dev" },
+        { name: "Henry Davis", avatar: "/api/placeholder/32/32", role: "Frontend Dev" }
       ],
       dueDate: "Mar 25",
       comments: 12,
       attachments: 3,
-      tags: ["Backend", "Payment"]
+      tags: ["Backend", "Payment", "Integration"],
+      progress: 10,
+      timeEstimate: "1 week",
+      isBlocked: false,
+      storyPoints: 8
     },
     {
       id: "6",
       title: "Email Notification System",
-      description: "Set up automated email notifications",
+      description: "Set up automated email notifications for user actions",
       priority: "Medium",
       assignees: [
-        { name: "Iris", avatar: "/api/placeholder/32/32" }
+        { name: "Iris Wang", avatar: "/api/placeholder/32/32", role: "Backend Dev" }
       ],
       dueDate: "Mar 27",
       comments: 2,
       attachments: 1,
-      tags: ["Backend", "Email"]
+      tags: ["Backend", "Email", "Automation"],
+      progress: 0,
+      timeEstimate: "3 days",
+      isBlocked: false,
+      storyPoints: 5
     },
     {
       id: "7",
       title: "Dark Theme Implementation",
-      description: "Add dark mode toggle functionality",
+      description: "Add dark mode toggle functionality with theme persistence",
       priority: "Low",
       assignees: [
-        { name: "Jack", avatar: "/api/placeholder/32/32" }
+        { name: "Jack Robinson", avatar: "/api/placeholder/32/32", role: "Frontend Dev" }
       ],
       dueDate: "Apr 1",
       comments: 4,
       attachments: 0,
-      tags: ["Frontend", "UI"]
+      tags: ["Frontend", "UI", "Theme"],
+      progress: 25,
+      timeEstimate: "2 days",
+      isBlocked: false,
+      storyPoints: 3
     }
   ],
   "in-progress": [
     {
       id: "8",
       title: "Real-time Chat Feature",
-      description: "Implement websocket-based chat system",
+      description: "Implement websocket-based chat system with file sharing",
       priority: "High",
       assignees: [
-        { name: "Kate", avatar: "/api/placeholder/32/32" },
-        { name: "Liam", avatar: "/api/placeholder/32/32" },
-        { name: "Mia", avatar: "/api/placeholder/32/32" }
+        { name: "Kate Wilson", avatar: "/api/placeholder/32/32", role: "Full Stack" },
+        { name: "Liam Chen", avatar: "/api/placeholder/32/32", role: "Backend Dev" },
+        { name: "Mia Rodriguez", avatar: "/api/placeholder/32/32", role: "Frontend Dev" }
       ],
       dueDate: "Mar 26",
       comments: 15,
       attachments: 5,
-      tags: ["Backend", "Real-time"]
+      tags: ["Backend", "Real-time", "WebSocket"],
+      progress: 65,
+      timeEstimate: "2 weeks",
+      isBlocked: false,
+      storyPoints: 13
     },
     {
       id: "9",
       title: "File Upload Component",
-      description: "Create drag-and-drop file upload interface",
+      description: "Create drag-and-drop file upload interface with progress tracking",
       priority: "Medium",
       assignees: [
-        { name: "Noah", avatar: "/api/placeholder/32/32" }
+        { name: "Noah Thompson", avatar: "/api/placeholder/32/32", role: "Frontend Dev" }
       ],
       dueDate: "Mar 29",
       comments: 7,
       attachments: 2,
-      tags: ["Frontend", "Component"]
+      tags: ["Frontend", "Component", "Upload"],
+      progress: 80,
+      timeEstimate: "4 days",
+      isBlocked: false,
+      storyPoints: 5
     },
     {
       id: "10",
       title: "Search Functionality",
-      description: "Add global search with filters",
+      description: "Add global search with filters and advanced querying",
       priority: "Medium",
       assignees: [
-        { name: "Olivia", avatar: "/api/placeholder/32/32" },
-        { name: "Paul", avatar: "/api/placeholder/32/32" }
+        { name: "Olivia Taylor", avatar: "/api/placeholder/32/32", role: "Frontend Dev" },
+        { name: "Paul Anderson", avatar: "/api/placeholder/32/32", role: "Backend Dev" }
       ],
       dueDate: "Apr 3",
       comments: 9,
       attachments: 1,
-      tags: ["Frontend", "Search"]
+      tags: ["Frontend", "Search", "Backend"],
+      progress: 40,
+      timeEstimate: "1 week",
+      isBlocked: false,
+      storyPoints: 8
     },
     {
       id: "11",
       title: "Performance Monitoring",
-      description: "Set up application performance monitoring",
+      description: "Set up application performance monitoring and alerting",
       priority: "Low",
       assignees: [
-        { name: "Quinn", avatar: "/api/placeholder/32/32" }
+        { name: "Quinn Martinez", avatar: "/api/placeholder/32/32", role: "DevOps" }
       ],
       dueDate: "Apr 8",
       comments: 3,
       attachments: 0,
-      tags: ["DevOps", "Monitoring"]
+      tags: ["DevOps", "Monitoring", "Performance"],
+      progress: 20,
+      timeEstimate: "3 days",
+      isBlocked: false,
+      storyPoints: 5
     },
     {
       id: "12",
       title: "Unit Test Coverage",
-      description: "Increase test coverage to 80%",
+      description: "Increase test coverage to 80% across all modules",
       priority: "Medium",
       assignees: [
-        { name: "Rachel", avatar: "/api/placeholder/32/32" },
-        { name: "Sam", avatar: "/api/placeholder/32/32" }
+        { name: "Rachel Green", avatar: "/api/placeholder/32/32", role: "QA Engineer" },
+        { name: "Sam Wilson", avatar: "/api/placeholder/32/32", role: "Developer" }
       ],
       dueDate: "Apr 10",
       comments: 6,
       attachments: 0,
-      tags: ["Testing", "Quality"]
+      tags: ["Testing", "Quality", "Coverage"],
+      progress: 55,
+      timeEstimate: "1 week",
+      isBlocked: false,
+      storyPoints: 8
     }
   ],
   review: [
     {
       id: "13",
       title: "Landing Page Redesign",
-      description: "New landing page with improved conversion",
+      description: "New landing page with improved conversion and modern design",
       priority: "High",
       assignees: [
-        { name: "Tina", avatar: "/api/placeholder/32/32" },
-        { name: "Uma", avatar: "/api/placeholder/32/32" }
+        { name: "Tina Foster", avatar: "/api/placeholder/32/32", role: "Designer" },
+        { name: "Uma Patel", avatar: "/api/placeholder/32/32", role: "Frontend Dev" }
       ],
       dueDate: "Mar 24",
       comments: 18,
       attachments: 8,
-      tags: ["Frontend", "Design", "Marketing"]
+      tags: ["Frontend", "Design", "Marketing"],
+      progress: 95,
+      timeEstimate: "2 weeks",
+      isBlocked: false,
+      storyPoints: 13
     },
     {
       id: "14",
       title: "Security Audit",
-      description: "Complete security vulnerability assessment",
+      description: "Complete security vulnerability assessment and penetration testing",
       priority: "High",
       assignees: [
-        { name: "Victor", avatar: "/api/placeholder/32/32" }
+        { name: "Victor Kumar", avatar: "/api/placeholder/32/32", role: "Security Expert" }
       ],
       dueDate: "Mar 23",
       comments: 11,
       attachments: 4,
-      tags: ["Security", "Audit"]
+      tags: ["Security", "Audit", "Compliance"],
+      progress: 90,
+      timeEstimate: "1 week",
+      isBlocked: false,
+      storyPoints: 8
     }
   ],
   done: [
     {
       id: "15",
       title: "User Profile Setup",
-      description: "User can create and edit their profile",
+      description: "User can create and edit their profile with avatar upload",
       priority: "Medium",
       assignees: [
-        { name: "Wendy", avatar: "/api/placeholder/32/32" }
+        { name: "Wendy Clark", avatar: "/api/placeholder/32/32", role: "Frontend Dev" }
       ],
       dueDate: "Mar 20",
       comments: 4,
       attachments: 1,
-      tags: ["Frontend", "User"]
+      tags: ["Frontend", "User", "Profile"],
+      progress: 100,
+      timeEstimate: "3 days",
+      isBlocked: false,
+      storyPoints: 5
     },
     {
       id: "16",
       title: "Basic Dashboard Layout",
-      description: "Initial dashboard structure and navigation",
+      description: "Initial dashboard structure and navigation system",
       priority: "High",
       assignees: [
-        { name: "Xander", avatar: "/api/placeholder/32/32" },
-        { name: "Yara", avatar: "/api/placeholder/32/32" }
+        { name: "Xander Scott", avatar: "/api/placeholder/32/32", role: "Frontend Dev" },
+        { name: "Yara Ahmed", avatar: "/api/placeholder/32/32", role: "Designer" }
       ],
       dueDate: "Mar 18",
       comments: 8,
       attachments: 3,
-      tags: ["Frontend", "Layout"]
+      tags: ["Frontend", "Layout", "Navigation"],
+      progress: 100,
+      timeEstimate: "1 week",
+      isBlocked: false,
+      storyPoints: 8
     }
   ]
 }
@@ -284,14 +372,24 @@ const tasks = {
 export default function ProjectsPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [draggedTask, setDraggedTask] = useState<string | null>(null)
+  const [viewMode, setViewMode] = useState<"kanban" | "list">("kanban")
+  const [filterPriority, setFilterPriority] = useState<string>("all")
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case "High": return "bg-red-500/10 text-red-400 border-red-500/20"
-      case "Medium": return "bg-yellow-500/10 text-yellow-400 border-yellow-500/20"
-      case "Low": return "bg-green-500/10 text-green-400 border-green-500/20"
-      default: return "bg-gray-500/10 text-gray-400 border-gray-500/20"
+      case "High": return "priority-high"
+      case "Medium": return "priority-medium"
+      case "Low": return "priority-low"
+      default: return "bg-slate-500/10 text-slate-400 border-slate-500/20"
     }
+  }
+
+  const getProgressColor = (progress: number) => {
+    if (progress === 100) return "bg-emerald-500"
+    if (progress >= 75) return "bg-blue-500"
+    if (progress >= 50) return "bg-amber-500"
+    if (progress >= 25) return "bg-orange-500"
+    return "bg-slate-400"
   }
 
   const handleDragStart = (taskId: string) => {
@@ -304,104 +402,202 @@ export default function ProjectsPage() {
 
   const handleDrop = (e: React.DragEvent, columnId: string) => {
     e.preventDefault()
-    // Here you would implement the logic to move the task
     setDraggedTask(null)
   }
 
+  const totalTasks = Object.values(tasks).flat().length
+  const completedTasks = tasks.done.length
+  const completionRate = Math.round((completedTasks / totalTasks) * 100)
+
   return (
     <div className="p-6 h-screen flex flex-col">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Projects</h1>
-          <p className="text-muted-foreground mt-1">Manage your team's projects and tasks</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <Input
-              placeholder="Search tasks..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 w-64"
-            />
+      {/* Enhanced Header */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Projects</h1>
+            <p className="text-muted-foreground mt-1">Manage your team's projects and tasks</p>
           </div>
-          <Button variant="outline" size="sm">
-            <Filter className="w-4 h-4 mr-2" />
-            Filter
-          </Button>
-          <Button size="sm">
-            <Plus className="w-4 h-4 mr-2" />
-            New Task
-          </Button>
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+              <Input
+                placeholder="Search tasks..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 w-64 form-input"
+              />
+            </div>
+            <Button variant="outline" size="sm" className="btn-glass">
+              <Filter className="w-4 h-4 mr-2" />
+              Filter
+            </Button>
+            <Button size="sm" className="btn-modern">
+              <Plus className="w-4 h-4 mr-2" />
+              New Task
+            </Button>
+          </div>
+        </div>
+
+        {/* Stats and View Toggle */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <div className="glass-card px-4 py-2 rounded-xl">
+              <div className="flex items-center gap-2">
+                <TrendingUp className="w-4 h-4 text-emerald-500" />
+                <span className="text-sm font-medium text-foreground">{completionRate}% Complete</span>
+              </div>
+            </div>
+            <div className="glass-card px-4 py-2 rounded-xl">
+              <div className="flex items-center gap-2">
+                <Users className="w-4 h-4 text-blue-500" />
+                <span className="text-sm font-medium text-foreground">{totalTasks} Total Tasks</span>
+              </div>
+            </div>
+            <div className="glass-card px-4 py-2 rounded-xl">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-emerald-500" />
+                <span className="text-sm font-medium text-foreground">{completedTasks} Completed</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <Button
+              variant={viewMode === "kanban" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setViewMode("kanban")}
+              className="btn-glass"
+            >
+              <Grid3X3 className="w-4 h-4" />
+            </Button>
+            <Button
+              variant={viewMode === "list" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setViewMode("list")}
+              className="btn-glass"
+            >
+              <List className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Kanban Board */}
+      {/* Enhanced Kanban Board */}
       <div className="flex-1 overflow-x-auto">
         <div className="flex gap-6 h-full min-w-max pb-6">
-          {columns.map((column) => (
-            <div
-              key={column.id}
-              className="w-80 flex flex-col"
-              onDragOver={handleDragOver}
-              onDrop={(e) => handleDrop(e, column.id)}
-            >
-              {/* Column Header */}
-              <div className="flex items-center justify-between p-4 bg-card rounded-t-lg border border-b-0 border-border/50">
-                <div className="flex items-center gap-3">
-                  <div className={`w-3 h-3 rounded-full ${column.color}`}></div>
-                  <h3 className="font-medium text-foreground">{column.title}</h3>
-                  <Badge variant="secondary" className="text-xs">
-                    {column.count}
-                  </Badge>
+          {columns.map((column) => {
+            const Icon = column.icon
+            return (
+              <div
+                key={column.id}
+                className="w-80 flex flex-col"
+                onDragOver={handleDragOver}
+                onDrop={(e) => handleDrop(e, column.id)}
+              >
+                {/* Enhanced Column Header */}
+                <div className="kanban-column p-5 mb-4 rounded-2xl">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2 rounded-lg bg-gradient-to-r ${column.gradient} shadow-lg`}>
+                        <Icon className="w-4 h-4 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-foreground">{column.title}</h3>
+                        <p className="text-xs text-muted-foreground">{column.description}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="secondary" className="font-medium">
+                        {column.count}
+                      </Badge>
+                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                        <Plus className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  {/* Progress Bar for Column */}
+                  <div className="w-full bg-background/50 rounded-full h-1">
+                    <div 
+                      className={`h-1 rounded-full bg-gradient-to-r ${column.gradient} transition-all duration-300`}
+                      style={{ 
+                        width: `${column.id === 'done' ? 100 : 
+                               column.id === 'review' ? 85 : 
+                               column.id === 'in-progress' ? 60 : 
+                               column.id === 'todo' ? 25 : 10}%` 
+                      }}
+                    ></div>
+                  </div>
                 </div>
-                <Button variant="ghost" size="sm">
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </div>
 
-              {/* Tasks Container */}
-              <div className="flex-1 p-4 bg-card/30 border border-t-0 border-border/50 rounded-b-lg overflow-y-auto">
-                <div className="space-y-3">
+                {/* Enhanced Tasks Container */}
+                <div className="flex-1 space-y-4 overflow-y-auto">
                   {tasks[column.id as keyof typeof tasks]?.map((task) => (
                     <Card
                       key={task.id}
-                      className="cursor-move hover:shadow-lg transition-all duration-200 border-border/50 bg-background/80 backdrop-blur-sm"
+                      className="kanban-card group cursor-move"
                       draggable
                       onDragStart={() => handleDragStart(task.id)}
                     >
-                      <CardHeader className="p-4 pb-3">
-                        <div className="flex items-start justify-between">
-                          <h4 className="font-medium text-sm text-foreground line-clamp-2">
+                      <CardHeader className="p-5 pb-3">
+                        <div className="flex items-start justify-between mb-2">
+                          <h4 className="font-semibold text-sm text-foreground leading-5 line-clamp-2 group-hover:text-primary transition-colors">
                             {task.title}
                           </h4>
-                          <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                            <MoreHorizontal className="w-3 h-3" />
-                          </Button>
+                          <div className="flex items-center gap-1">
+                            {task.isBlocked && (
+                              <AlertCircle className="w-4 h-4 text-red-500" />
+                            )}
+                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <MoreHorizontal className="w-3 h-3" />
+                            </Button>
+                          </div>
                         </div>
-                        <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
+                        <p className="text-xs text-muted-foreground line-clamp-2 leading-4">
                           {task.description}
                         </p>
                       </CardHeader>
                       
-                      <CardContent className="p-4 pt-0">
+                      <CardContent className="p-5 pt-0 space-y-4">
                         {/* Tags */}
-                        <div className="flex flex-wrap gap-1 mb-3">
-                          {task.tags.map((tag) => (
+                        <div className="flex flex-wrap gap-1">
+                          {task.tags.slice(0, 3).map((tag) => (
                             <Badge
                               key={tag}
                               variant="outline"
-                              className="text-xs px-2 py-0.5 border-border/50"
+                              className="text-xs px-2 py-1 border-border/50 bg-background/50"
                             >
                               {tag}
                             </Badge>
                           ))}
+                          {task.tags.length > 3 && (
+                            <Badge variant="outline" className="text-xs px-2 py-1">
+                              +{task.tags.length - 3}
+                            </Badge>
+                          )}
                         </div>
 
-                        {/* Priority */}
-                        <div className="flex items-center justify-between mb-3">
-                          <Badge className={`text-xs ${getPriorityColor(task.priority)}`}>
+                        {/* Progress Bar */}
+                        {task.progress > 0 && (
+                          <div className="space-y-1">
+                            <div className="flex justify-between items-center">
+                              <span className="text-xs text-muted-foreground">Progress</span>
+                              <span className="text-xs font-medium text-foreground">{task.progress}%</span>
+                            </div>
+                            <div className="w-full bg-muted rounded-full h-1.5">
+                              <div 
+                                className={`h-1.5 rounded-full ${getProgressColor(task.progress)} transition-all duration-300`}
+                                style={{ width: `${task.progress}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Priority and Due Date */}
+                        <div className="flex items-center justify-between">
+                          <Badge className={`text-xs font-medium ${getPriorityColor(task.priority)}`}>
+                            <Flag className="w-3 h-3 mr-1" />
                             {task.priority}
                           </Badge>
                           <div className="flex items-center gap-1 text-xs text-muted-foreground">
@@ -410,20 +606,28 @@ export default function ProjectsPage() {
                           </div>
                         </div>
 
+                        {/* Story Points and Time Estimate */}
+                        <div className="flex items-center justify-between text-xs text-muted-foreground">
+                          <span className="bg-muted px-2 py-1 rounded-md font-medium">
+                            {task.storyPoints} pts
+                          </span>
+                          <span>{task.timeEstimate}</span>
+                        </div>
+
                         {/* Assignees and Stats */}
                         <div className="flex items-center justify-between">
                           <div className="flex -space-x-2">
                             {task.assignees.slice(0, 3).map((assignee, index) => (
-                              <Avatar key={index} className="w-6 h-6 border-2 border-background">
+                              <Avatar key={index} className="w-7 h-7 border-2 border-background ring-1 ring-border/50">
                                 <AvatarImage src={assignee.avatar} />
-                                <AvatarFallback className="text-xs">
-                                  {assignee.name[0]}
+                                <AvatarFallback className="text-xs font-medium">
+                                  {assignee.name.split(' ').map(n => n[0]).join('')}
                                 </AvatarFallback>
                               </Avatar>
                             ))}
                             {task.assignees.length > 3 && (
-                              <div className="w-6 h-6 rounded-full bg-muted border-2 border-background flex items-center justify-center">
-                                <span className="text-xs text-muted-foreground">
+                              <div className="w-7 h-7 rounded-full bg-muted border-2 border-background flex items-center justify-center">
+                                <span className="text-xs font-medium text-muted-foreground">
                                   +{task.assignees.length - 3}
                                 </span>
                               </div>
@@ -432,13 +636,13 @@ export default function ProjectsPage() {
                           
                           <div className="flex items-center gap-3">
                             {task.comments > 0 && (
-                              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                              <div className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
                                 <MessageSquare className="w-3 h-3" />
                                 {task.comments}
                               </div>
                             )}
                             {task.attachments > 0 && (
-                              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                              <div className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
                                 <Paperclip className="w-3 h-3" />
                                 {task.attachments}
                               </div>
@@ -448,10 +652,19 @@ export default function ProjectsPage() {
                       </CardContent>
                     </Card>
                   ))}
+                  
+                  {/* Add Task Button */}
+                  <Button 
+                    variant="ghost" 
+                    className="w-full h-12 border-2 border-dashed border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 rounded-xl"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Task
+                  </Button>
                 </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </div>

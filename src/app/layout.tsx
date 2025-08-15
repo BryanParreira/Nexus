@@ -1,4 +1,3 @@
-// app/layout.tsx
 import type { Metadata } from 'next'
 import { cn } from '@/lib/utils'
 import './globals.css'
@@ -68,7 +67,7 @@ export default function RootLayout({
       }}
     >
       <head>
-        <meta name="theme-color" content="#1a1a2e" />
+        <meta name="theme-color" content="#0f0f23" />
         <meta name="color-scheme" content="dark" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -78,10 +77,8 @@ export default function RootLayout({
       <body className={cn(
         'min-h-screen bg-background font-sans antialiased',
       )}>
-        <div vaul-drawer-wrapper="">
-          <div className="relative flex min-h-screen flex-col">
-            {children}
-          </div>
+        <div className="relative flex min-h-screen flex-col">
+          {children}
         </div>
       </body>
     </html>
