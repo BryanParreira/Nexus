@@ -2,12 +2,14 @@
 
 import { useState, useMemo } from "react";
 import { addDays, setHours, setMinutes, getDay } from "date-fns";
-import { useCalendarContext } from "@/components/calendar-context";
+import { useCalendarContext } from "@/components/event-calendar/calendar-context";
+import { EventCalendar } from "@/components/event-calendar/event-calendar";
 
 import {
   type CalendarEvent,
   type EventColor,
-} from "@/components/event-calendar";
+} from "@/components/event-calendar/calendar-context";
+
 // Etiquettes data for calendar filtering
 export const etiquettes = [
   {
@@ -613,4 +615,14 @@ export default function Component() {
   const handleEventDelete = (eventId: string) => {
     setEvents(events.filter((event) => event.id !== eventId));
   };
+
+  // ✅ ADD THIS RETURN STATEMENT - This was missing!
+  return (
+    <EventCalendar
+      events={visibleEvents}
+      onEventAdd={handleEventAdd}
+      onEventUpdate={handleEventUpdate}
+      onEventDelete={handleEventDelete}
+    />
+  );
 }

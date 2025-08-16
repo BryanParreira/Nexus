@@ -32,6 +32,7 @@ import {
   type CalendarEvent,
 } from "@/components/event-calendar";
 import { DefaultStartHour } from "@/components/event-calendar/constants";
+import { useEventVisibility } from "@/hooks/use-event-visibility";
 
 interface MonthViewProps {
   currentDate: Date;
@@ -151,8 +152,8 @@ export function MonthView({
                       {format(day, "d")}
                     </div>
                     <div
-                      ref={isReferenceCell ? contentRef : null}
-                      className="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]"
+                      ref={isReferenceCell ? contentRef : undefined}
+                        className="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]"
                     >
                       {sortEvents(allDayEvents).map((event, index) => {
                         const eventStart = new Date(event.start);

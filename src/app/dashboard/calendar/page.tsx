@@ -6,17 +6,24 @@ export const metadata: Metadata = {
 
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { CalendarProvider } from "@/components/event-calendar/calendar-context";
 import BigCalendar from "@/components/big-calendar";
 
-export default function Page() {
+const DashboardPage: React.FC = () => {
   return (
     <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <div className="flex flex-1 flex-col gap-4 p-2 pt-0">
-          <BigCalendar />
+      <CalendarProvider>
+        <div className="flex h-screen w-full">
+          <AppSidebar />
+          <SidebarInset>
+            <div className="flex flex-1 flex-col gap-4 p-2 pt-0">
+              <BigCalendar />
+            </div>
+          </SidebarInset>
         </div>
-      </SidebarInset>
+      </CalendarProvider>
     </SidebarProvider>
   );
-}
+};
+
+export default DashboardPage;

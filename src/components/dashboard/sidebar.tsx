@@ -1,348 +1,407 @@
-// components/dashboard/sidebar.tsx
+// src/components/app-sidebar.tsx
 "use client"
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { cn } from "@/lib/utils"
-import {
+import { useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import { Progress } from '@/components/ui/progress'
+import { 
   LayoutDashboard,
   FolderOpen,
-  CheckSquare,
   Calendar,
-  Database,
+  CheckSquare,
   Users,
+  BarChart3,
   Settings,
-  LogOut,
-  ChevronLeft,
+  FileText,
+  Zap,
+  MessageSquare,
   Bell,
+  ChevronRight,
+  ChevronDown,
+  Plus,
   Search,
-  Plus
-} from "lucide-react"
+  LogOut,
+  User,
+  Moon,
+  Sun,
+  Bookmark,
+  Clock,
+  Star,
+  Activity,
+  Target,
+  Layers,
+  GitBranch,
+  Database
+} from 'lucide-react'
 
 const navigation = [
   { 
-    name: "Dashboard", 
-    href: "/dashboard", 
+    name: 'Dashboard', 
+    href: '/dashboard', 
     icon: LayoutDashboard,
-    badge: null
+    description: 'Overview & Analytics'
   },
   { 
-    name: "Projects", 
-    href: "/dashboard/projects", 
+    name: 'Projects', 
+    href: '/dashboard/projects', 
     icon: FolderOpen,
-    badge: "12"
+    description: 'Manage Projects',
+    badge: 12
   },
   { 
-    name: "Tasks", 
-    href: "/dashboard/tasks", 
+    name: 'Tasks', 
+    href: '/dashboard/tasks', 
     icon: CheckSquare,
-    badge: "8"
+    description: 'Task Management',
+    badge: 8,
+    urgent: true
   },
   { 
-    name: "Calendar", 
-    href: "/dashboard/calendar", 
+    name: 'Calendar', 
+    href: '/dashboard/calendar', 
     icon: Calendar,
-    badge: null
+    description: 'Schedule & Events'
   },
   { 
-    name: "Schema", 
-    href: "/dashboard/schema", 
-    icon: Database,
-    badge: null
-  },
-  { 
-    name: "Team", 
-    href: "/dashboard/team", 
+    name: 'Team', 
+    href: '/dashboard/team', 
     icon: Users,
-    badge: "5"
+    description: 'Team Management'
   },
 ]
 
 const secondaryNavigation = [
   { 
-    name: "Settings", 
-    href: "/dashboard/settings", 
-    icon: Settings 
+    name: 'Analytics', 
+    href: '/dashboard/analytics', 
+    icon: BarChart3,
+    description: 'Reports & Insights'
+  },
+  { 
+    name: 'Schema', 
+    href: '/dashboard/schema', 
+    icon: Database,
+    description: 'Database Schema'
+  },
+  { 
+    name: 'Messages', 
+    href: '/dashboard/messages', 
+    icon: MessageSquare,
+    description: 'Team Communication',
+    badge: 3
+  },
+  { 
+    name: 'Settings', 
+    href: '/dashboard/settings', 
+    icon: Settings,
+    description: 'App Configuration'
   },
 ]
 
-interface SidebarProps {
-  collapsed: boolean
-  mobileOpen: boolean
-  onCollapse: (collapsed: boolean) => void
-  onMobileClose: () => void
-}
+const recentProjects = [
+  {
+    name: "E-Commerce Platform",
+    progress: 75,
+    color: "bg-blue-500",
+    href: "/dashboard/projects/1"
+  },
+  {
+    name: "Mobile Analytics",
+    progress: 90,
+    color: "bg-emerald-500",
+    href: "/dashboard/projects/2"
+  },
+  {
+    name: "Brand Identity",
+    progress: 25,
+    color: "bg-purple-500",
+    href: "/dashboard/projects/3"
+  }
+]
 
-export function Sidebar({ 
-  collapsed, 
-  mobileOpen, 
-  onCollapse, 
-  onMobileClose 
-}: SidebarProps) {
+export function AppSidebar() {
+  const [isCollapsed, setIsCollapsed] = useState(false)
+  const [showRecentProjects, setShowRecentProjects] = useState(true)
   const pathname = usePathname()
 
-  return (
-    <>
-      {/* Desktop Sidebar */}
-      <div className={cn(
-        "fixed top-0 left-0 z-30 h-full bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out hidden lg:flex flex-col",
-        collapsed ? "w-16" : "w-64"
-      )}>
-        {/* Header */}
-        <div className="flex items-center justify-between h-16 px-4 border-b border-sidebar-border">
-          {!collapsed && (
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-sidebar-primary rounded-lg flex items-center justify-center">
-                <div className="w-4 h-4 bg-sidebar-primary-foreground rounded-sm"></div>
-              </div>
-              <h1 className="text-lg font-bold text-sidebar-foreground">ProjectFlow</h1>
-            </div>
-          )}
-          
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onCollapse(!collapsed)}
-            className="p-2 hover:bg-sidebar-accent"
-          >
-            <ChevronLeft className={cn(
-              "h-4 w-4 text-sidebar-foreground transition-transform duration-200",
-              collapsed && "rotate-180"
-            )} />
-          </Button>
-        </div>
+  const isActive = (href: string) => pathname === href
 
-        {/* Quick Actions */}
-        {!collapsed && (
-          <div className="p-4 border-b border-sidebar-border">
-            <div className="flex gap-2">
-              <Button size="sm" className="flex-1 bg-sidebar-primary hover:bg-sidebar-primary/90 text-sidebar-primary-foreground">
-                <Plus className="w-4 h-4 mr-2" />
-                New Project
-              </Button>
+  return (
+    <div className={cn(
+      "flex h-screen flex-col bg-[#111111] border-r border-white/5 transition-all duration-300",
+      isCollapsed ? "w-16" : "w-72"
+    )}>
+      {/* Header */}
+      <div className="flex h-16 items-center justify-between px-4 border-b border-white/5">
+        {!isCollapsed && (
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/25">
+              <LayoutDashboard className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <span className="text-lg font-bold text-white">ProjectFlow</span>
+              <div className="text-xs text-gray-400">v2.1.0</div>
             </div>
           </div>
         )}
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-gray-400 hover:text-white hover:bg-white/10 p-2"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+        >
+          <ChevronRight className={cn("w-4 h-4 transition-transform", isCollapsed ? "rotate-0" : "rotate-180")} />
+        </Button>
+      </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+      {/* Search */}
+      {!isCollapsed && (
+        <div className="p-4 border-b border-white/5">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search..."
+              className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Quick Stats */}
+      {!isCollapsed && (
+        <div className="p-4 border-b border-white/5">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="p-3 bg-white/5 rounded-xl text-center hover:bg-white/10 transition-colors cursor-pointer">
+              <div className="text-lg font-bold text-white">24</div>
+              <div className="text-xs text-gray-400">Active</div>
+            </div>
+            <div className="p-3 bg-white/5 rounded-xl text-center hover:bg-white/10 transition-colors cursor-pointer">
+              <div className="text-lg font-bold text-emerald-400">87%</div>
+              <div className="text-xs text-gray-400">Complete</div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Navigation */}
+      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+        <div className="space-y-1">
           {navigation.map((item) => {
-            const Icon = item.icon
-            const isActive = pathname === item.href
-            
+            const active = isActive(item.href)
             return (
-              <Link key={item.name} href={item.href}>
-                <Button
-                  variant="ghost"
-                  className={cn(
-                    "w-full justify-start gap-3 h-10 px-3 transition-all duration-200",
-                    isActive 
-                      ? "bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary/90" 
-                      : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                    collapsed && "px-2"
+              <Link
+                key={item.name}
+                href={item.href}
+                className={cn(
+                  "sidebar-item group relative",
+                  active && "active",
+                  isCollapsed && "justify-center px-3"
+                )}
+              >
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                  <item.icon className={cn(
+                    "w-5 h-5 flex-shrink-0 transition-colors",
+                    active ? "text-white" : "text-gray-400 group-hover:text-white"
+                  )} />
+                  {!isCollapsed && (
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-sm truncate">{item.name}</div>
+                      <div className="text-xs text-gray-500 truncate">{item.description}</div>
+                    </div>
                   )}
-                >
-                  <Icon className="h-5 w-5 flex-shrink-0" />
-                  {!collapsed && (
-                    <>
-                      <span className="flex-1 text-left">{item.name}</span>
-                      {item.badge && (
-                        <Badge 
-                          variant="secondary" 
-                          className="ml-auto bg-sidebar-accent text-sidebar-accent-foreground text-xs"
-                        >
-                          {item.badge}
-                        </Badge>
-                      )}
-                    </>
-                  )}
-                </Button>
+                </div>
+                {!isCollapsed && item.badge && (
+                  <Badge className={cn(
+                    "text-xs px-2 py-0.5 min-w-[20px] h-5 flex items-center justify-center",
+                    item.urgent 
+                      ? "bg-red-500/20 text-red-400 animate-pulse" 
+                      : "bg-blue-500/20 text-blue-400"
+                  )}>
+                    {item.badge}
+                  </Badge>
+                )}
+                {isCollapsed && item.badge && (
+                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
+                    <span className="text-xs font-bold text-white">{item.badge}</span>
+                  </div>
+                )}
               </Link>
             )
           })}
-          
-          {/* Divider */}
-          <div className="my-4 border-t border-sidebar-border"></div>
-          
-          {/* Secondary Navigation */}
-          {secondaryNavigation.map((item) => {
-            const Icon = item.icon
-            const isActive = pathname === item.href
-            
-            return (
-              <Link key={item.name} href={item.href}>
-                <Button
-                  variant="ghost"
-                  className={cn(
-                    "w-full justify-start gap-3 h-10 px-3 transition-all duration-200",
-                    isActive 
-                      ? "bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary/90" 
-                      : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                    collapsed && "px-2"
-                  )}
-                >
-                  <Icon className="h-5 w-5 flex-shrink-0" />
-                  {!collapsed && <span className="flex-1 text-left">{item.name}</span>}
-                </Button>
-              </Link>
-            )
-          })}
-        </nav>
+        </div>
 
-        {/* User Profile */}
-        <div className="p-4 border-t border-sidebar-border">
-          <div className={cn(
-            "flex items-center gap-3 p-2 rounded-lg hover:bg-sidebar-accent transition-colors cursor-pointer",
-            collapsed && "justify-center"
-          )}>
-            <Avatar className="h-8 w-8 flex-shrink-0">
-              <AvatarImage src="/api/placeholder/32/32" />
-              <AvatarFallback className="bg-sidebar-primary text-sidebar-primary-foreground text-sm">
-                SS
-              </AvatarFallback>
-            </Avatar>
-            {!collapsed && (
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-sidebar-foreground truncate">Sofia Safier</p>
-                <p className="text-xs text-sidebar-foreground/60 truncate">sofia@company.com</p>
+        {/* Recent Projects */}
+        {!isCollapsed && (
+          <div className="pt-6">
+            <div className="flex items-center justify-between px-3 mb-3">
+              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Recent Projects</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="p-1 h-auto text-gray-400 hover:text-white"
+                onClick={() => setShowRecentProjects(!showRecentProjects)}
+              >
+                <ChevronDown className={cn("w-3 h-3 transition-transform", showRecentProjects ? "rotate-0" : "-rotate-90")} />
+              </Button>
+            </div>
+            {showRecentProjects && (
+              <div className="space-y-2">
+                {recentProjects.map((project, index) => (
+                  <Link
+                    key={index}
+                    href={project.href}
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors group"
+                  >
+                    <div className={`w-3 h-3 rounded-full ${project.color}`}></div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm text-white truncate group-hover:text-blue-300 transition-colors">
+                        {project.name}
+                      </div>
+                      <div className="flex items-center gap-2 mt-1">
+                        <Progress value={project.progress} className="h-1 flex-1 bg-white/10">
+                          <div 
+                            className={`h-full ${project.color} rounded-full transition-all duration-500`}
+                            style={{ width: `${project.progress}%` }}
+                          />
+                        </Progress>
+                        <span className="text-xs text-gray-400">{project.progress}%</span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start text-gray-400 hover:text-white hover:bg-white/5 text-sm"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  New Project
+                </Button>
               </div>
             )}
           </div>
-          
-          {!collapsed && (
+        )}
+
+        {/* Secondary Navigation */}
+        <div className="pt-6 border-t border-white/5 space-y-1">
+          {!isCollapsed && (
+            <h3 className="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+              Tools & Settings
+            </h3>
+          )}
+          {secondaryNavigation.map((item) => {
+            const active = isActive(item.href)
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={cn(
+                  "sidebar-item group relative",
+                  active && "active",
+                  isCollapsed && "justify-center px-3"
+                )}
+              >
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                  <item.icon className={cn(
+                    "w-5 h-5 flex-shrink-0 transition-colors",
+                    active ? "text-white" : "text-gray-400 group-hover:text-white"
+                  )} />
+                  {!isCollapsed && (
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-sm truncate">{item.name}</div>
+                      <div className="text-xs text-gray-500 truncate">{item.description}</div>
+                    </div>
+                  )}
+                </div>
+                {!isCollapsed && item.badge && (
+                  <Badge className="bg-orange-500/20 text-orange-400 text-xs px-2 py-0.5">
+                    {item.badge}
+                  </Badge>
+                )}
+                {isCollapsed && item.badge && (
+                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center">
+                    <span className="text-xs font-bold text-white">{item.badge}</span>
+                  </div>
+                )}
+              </Link>
+            )
+          })}
+        </div>
+      </nav>
+
+      {/* User Profile */}
+      <div className="border-t border-white/5 p-4">
+        {!isCollapsed ? (
+          <div className="space-y-4">
+            {/* Quick Actions */}
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex-1 text-gray-400 hover:text-white hover:bg-white/10 justify-start"
+              >
+                <Bell className="w-4 h-4 mr-2" />
+                <span className="relative">
+                  Notifications
+                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                </span>
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="p-2 text-gray-400 hover:text-white hover:bg-white/10"
+              >
+                <Moon className="w-4 h-4" />
+              </Button>
+            </div>
+
+            {/* User Profile */}
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
+              <div className="relative">
+                <Avatar className="w-10 h-10 ring-2 ring-blue-500/20 group-hover:ring-blue-500/40 transition-all">
+                  <AvatarImage src="/api/placeholder/40/40" />
+                  <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold">
+                    J
+                  </AvatarFallback>
+                </Avatar>
+                <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-[#111111]"></div>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-white truncate">Jonathon</p>
+                <p className="text-xs text-gray-400 truncate">Project Manager</p>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="p-1 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-white"
+              >
+                <LogOut className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-3">
             <Button
               variant="ghost"
               size="sm"
-              className="w-full mt-2 justify-start gap-2 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              className="w-full p-2 text-gray-400 hover:text-white hover:bg-white/10"
             >
-              <LogOut className="h-4 w-4" />
-              Sign out
+              <Bell className="w-5 h-5" />
             </Button>
-          )}
-        </div>
-      </div>
-
-      {/* Mobile Sidebar */}
-      <div className={cn(
-        "fixed top-0 left-0 z-40 h-full w-64 bg-sidebar border-r border-sidebar-border transform transition-transform duration-300 ease-in-out lg:hidden",
-        mobileOpen ? "translate-x-0" : "-translate-x-full"
-      )}>
-        {/* Header */}
-        <div className="flex items-center justify-between h-16 px-4 border-b border-sidebar-border">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-sidebar-primary rounded-lg flex items-center justify-center">
-              <div className="w-4 h-4 bg-sidebar-primary-foreground rounded-sm"></div>
-            </div>
-            <h1 className="text-lg font-bold text-sidebar-foreground">ProjectFlow</h1>
-          </div>
-          
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onMobileClose}
-            className="p-2 hover:bg-sidebar-accent"
-          >
-            <ChevronLeft className="h-4 w-4 text-sidebar-foreground" />
-          </Button>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="p-4 border-b border-sidebar-border">
-          <div className="flex gap-2">
-            <Button size="sm" className="flex-1 bg-sidebar-primary hover:bg-sidebar-primary/90 text-sidebar-primary-foreground">
-              <Plus className="w-4 h-4 mr-2" />
-              New Project
-            </Button>
-          </div>
-        </div>
-
-        {/* Navigation */}
-        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-          {navigation.map((item) => {
-            const Icon = item.icon
-            const isActive = pathname === item.href
-            
-            return (
-              <Link key={item.name} href={item.href} onClick={onMobileClose}>
-                <Button
-                  variant="ghost"
-                  className={cn(
-                    "w-full justify-start gap-3 h-10 px-3 transition-all duration-200",
-                    isActive 
-                      ? "bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary/90" 
-                      : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                  )}
-                >
-                  <Icon className="h-5 w-5 flex-shrink-0" />
-                  <span className="flex-1 text-left">{item.name}</span>
-                  {item.badge && (
-                    <Badge 
-                      variant="secondary" 
-                      className="ml-auto bg-sidebar-accent text-sidebar-accent-foreground text-xs"
-                    >
-                      {item.badge}
-                    </Badge>
-                  )}
-                </Button>
-              </Link>
-            )
-          })}
-          
-          {/* Divider */}
-          <div className="my-4 border-t border-sidebar-border"></div>
-          
-          {/* Secondary Navigation */}
-          {secondaryNavigation.map((item) => {
-            const Icon = item.icon
-            const isActive = pathname === item.href
-            
-            return (
-              <Link key={item.name} href={item.href} onClick={onMobileClose}>
-                <Button
-                  variant="ghost"
-                  className={cn(
-                    "w-full justify-start gap-3 h-10 px-3 transition-all duration-200",
-                    isActive 
-                      ? "bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary/90" 
-                      : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                  )}
-                >
-                  <Icon className="h-5 w-5 flex-shrink-0" />
-                  <span className="flex-1 text-left">{item.name}</span>
-                </Button>
-              </Link>
-            )
-          })}
-        </nav>
-
-        {/* User Profile */}
-        <div className="p-4 border-t border-sidebar-border">
-          <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-sidebar-accent transition-colors cursor-pointer">
-            <Avatar className="h-8 w-8 flex-shrink-0">
-              <AvatarImage src="/api/placeholder/32/32" />
-              <AvatarFallback className="bg-sidebar-primary text-sidebar-primary-foreground text-sm">
-                SS
+            <Avatar className="w-10 h-10 mx-auto ring-2 ring-blue-500/20 hover:ring-blue-500/40 transition-all cursor-pointer">
+              <AvatarImage src="/api/placeholder/40/40" />
+              <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold">
+                J
               </AvatarFallback>
             </Avatar>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-sidebar-foreground truncate">Sofia Safier</p>
-              <p className="text-xs text-sidebar-foreground/60 truncate">sofia@company.com</p>
-            </div>
           </div>
-          
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full mt-2 justify-start gap-2 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-          >
-            <LogOut className="h-4 w-4" />
-            Sign out
-          </Button>
-        </div>
+        )}
       </div>
-    </>
+    </div>
   )
 }

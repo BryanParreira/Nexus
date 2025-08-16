@@ -23,12 +23,12 @@ import {
   DroppableCell,
   EventItem,
   isMultiDayEvent,
-  useCurrentTimeIndicator,
   WeekCellsHeight,
   type CalendarEvent,
 } from "@/components/event-calendar";
 import { StartHour, EndHour } from "@/components/event-calendar/constants";
 import { cn } from "@/lib/utils";
+import {useCurrentTimeIndicator} from "@/hooks/useCurrentTimeIndicator"
 
 interface WeekViewProps {
   currentDate: Date;
@@ -71,6 +71,16 @@ export function WeekView({
     });
   }, [currentDate]);
 
+  const useCurrentTimeIndicator = (currentDate: Date, view: string) => {
+  const now = new Date();
+  const currentHour = now.getHours() + now.getMinutes() / 60;
+  const isToday = new Date().toDateString() === currentDate.toDateString();
+  
+  return {
+    currentTimePosition: ((currentHour - StartHour) / (EndHour - StartHour)) * 100,
+    currentTimeVisible: isToday && currentHour >= StartHour && currentHour <= EndHour
+  };
+};
   // Get all-day events and multi-day events for the week
   const allDayEvents = useMemo(() => {
     return events
