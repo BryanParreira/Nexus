@@ -1,275 +1,275 @@
+// src/app/dashboard/team/page.tsx
 "use client"
 
-import { useState } from "react"
+import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Progress } from "@/components/ui/progress"
 import { 
-  Plus, 
-  Search, 
-  Filter, 
+  Plus,
+  Filter,
+  Search,
   MoreHorizontal,
+  Users,
   Mail,
   Phone,
   MapPin,
   Calendar,
-  Star,
-  Users,
   Clock,
-  CheckCircle2,
+  Star,
+  Activity,
   TrendingUp,
-  MessageSquare
+  UserPlus,
+  Settings
 } from "lucide-react"
 
-// Mock team data
 const teamMembers = [
   {
-    id: "1",
-    name: "Sofia Safier",
-    email: "sofia@company.com",
-    phone: "+1 (555) 123-4567",
-    avatar: "/api/placeholder/64/64",
-    role: "Product Manager",
-    department: "Product",
-    status: "online",
-    location: "San Francisco, CA",
-    joinDate: "2023-01-15",
-    tasksCompleted: 142,
-    tasksInProgress: 8,
-    rating: 4.9,
-    bio: "Passionate product manager with 5+ years of experience in building user-centric products.",
-    skills: ["Product Strategy", "User Research", "Data Analysis", "Agile"],
-    projects: ["Website Redesign", "Mobile App", "User Dashboard"],
-    lastActive: "2 minutes ago",
-    isManager: true
-  },
-  {
-    id: "2",
-    name: "Alice Johnson",
-    email: "alice@company.com",
-    phone: "+1 (555) 234-5678",
-    avatar: "/api/placeholder/64/64",
-    role: "Senior Developer",
+    id: 1,
+    name: "Alice Chen",
+    email: "alice.chen@company.com",
+    role: "Frontend Developer",
     department: "Engineering",
-    status: "online",
+    location: "San Francisco, CA",
+    status: "Online",
+    avatar: "/api/placeholder/64/64",
+    initials: "AC",
+    joinDate: "2023-01-15",
+    skills: ["React", "TypeScript", "UI/UX", "JavaScript"],
+    currentProjects: ["E-commerce Platform", "Mobile Banking App"],
+    tasksCompleted: 124,
+    tasksInProgress: 8,
+    performance: 95,
+    lastActivity: "2 minutes ago",
+    timezone: "PST",
+    phone: "+1 (555) 123-4567",
+    birthday: "1992-03-15",
+    workload: 85
+  },
+  {
+    id: 2,
+    name: "Bob Wilson",
+    email: "bob.wilson@company.com",
+    role: "Project Manager",
+    department: "Management",
     location: "New York, NY",
-    joinDate: "2022-08-20",
-    tasksCompleted: 156,
-    tasksInProgress: 12,
-    rating: 4.8,
-    bio: "Full-stack developer specializing in React and Node.js with expertise in cloud technologies.",
-    skills: ["React", "Node.js", "TypeScript", "AWS", "Docker"],
-    projects: ["API Development", "Frontend Optimization", "Database Migration"],
-    lastActive: "5 minutes ago",
-    isManager: false
-  },
-  {
-    id: "3",
-    name: "Bob Smith",
-    email: "bob@company.com",
-    phone: "+1 (555) 345-6789",
+    status: "In Meeting",
     avatar: "/api/placeholder/64/64",
-    role: "UX Designer",
-    department: "Design",
-    status: "away",
-    location: "Austin, TX",
-    joinDate: "2023-03-10",
+    initials: "BW",
+    joinDate: "2022-08-22",
+    skills: ["Project Management", "Agile", "Scrum", "Leadership"],
+    currentProjects: ["Brand Identity Refresh", "API Integration Platform"],
     tasksCompleted: 89,
-    tasksInProgress: 6,
-    rating: 4.7,
-    bio: "Creative UX designer focused on creating intuitive and accessible user experiences.",
-    skills: ["Figma", "User Research", "Prototyping", "Design Systems"],
-    projects: ["Design System", "Mobile UI", "User Testing"],
-    lastActive: "1 hour ago",
-    isManager: false
+    tasksInProgress: 12,
+    performance: 92,
+    lastActivity: "15 minutes ago",
+    timezone: "EST",
+    phone: "+1 (555) 234-5678",
+    birthday: "1988-07-22",
+    workload: 75
   },
   {
-    id: "4",
-    name: "Charlie Brown",
-    email: "charlie@company.com",
-    phone: "+1 (555) 456-7890",
+    id: 3,
+    name: "Carol Martinez",
+    email: "carol.martinez@company.com",
+    role: "UI/UX Designer",
+    department: "Design",
+    location: "Austin, TX",
+    status: "Away",
     avatar: "/api/placeholder/64/64",
+    initials: "CM",
+    joinDate: "2023-03-10",
+    skills: ["Figma", "Adobe XD", "User Research", "Prototyping"],
+    currentProjects: ["E-commerce Platform", "Customer Support Portal"],
+    tasksCompleted: 76,
+    tasksInProgress: 6,
+    performance: 88,
+    lastActivity: "1 hour ago",
+    timezone: "CST",
+    phone: "+1 (555) 345-6789",
+    birthday: "1994-11-08",
+    workload: 60
+  },
+  {
+    id: 4,
+    name: "David Kim",
+    email: "david.kim@company.com",
+    role: "Backend Developer",
+    department: "Engineering",
+    location: "Seattle, WA",
+    status: "Online",
+    avatar: "/api/placeholder/64/64",
+    initials: "DK",
+    joinDate: "2022-11-05",
+    skills: ["Node.js", "Python", "Database", "APIs"],
+    currentProjects: ["Mobile Banking App", "Data Analytics Dashboard"],
+    tasksCompleted: 156,
+    tasksInProgress: 10,
+    performance: 97,
+    lastActivity: "5 minutes ago",
+    timezone: "PST",
+    phone: "+1 (555) 456-7890",
+    birthday: "1990-02-14",
+    workload: 90
+  },
+  {
+    id: 5,
+    name: "Emma Thompson",
+    email: "emma.thompson@company.com",
+    role: "QA Engineer",
+    department: "Quality Assurance",
+    location: "Boston, MA",
+    status: "Offline",
+    avatar: "/api/placeholder/64/64",
+    initials: "ET",
+    joinDate: "2023-05-18",
+    skills: ["Testing", "Automation", "Selenium", "Bug Tracking"],
+    currentProjects: ["API Integration Platform", "Mobile Banking App"],
+    tasksCompleted: 98,
+    tasksInProgress: 5,
+    performance: 91,
+    lastActivity: "2 hours ago",
+    timezone: "EST",
+    phone: "+1 (555) 567-8901",
+    birthday: "1993-09-03",
+    workload: 70
+  },
+  {
+    id: 6,
+    name: "Frank Rodriguez",
+    email: "frank.rodriguez@company.com",
     role: "DevOps Engineer",
     department: "Engineering",
-    status: "offline",
-    location: "Seattle, WA",
-    joinDate: "2021-11-05",
-    tasksCompleted: 203,
-    tasksInProgress: 5,
-    rating: 4.9,
-    bio: "DevOps engineer with extensive experience in cloud infrastructure and automation.",
-    skills: ["Kubernetes", "Terraform", "CI/CD", "Monitoring", "Security"],
-    projects: ["Infrastructure Upgrade", "Security Audit", "Deployment Pipeline"],
-    lastActive: "3 hours ago",
-    isManager: false
-  },
-  {
-    id: "5",
-    name: "Diana Prince",
-    email: "diana@company.com",
-    phone: "+1 (555) 567-8901",
+    location: "Denver, CO",
+    status: "Online",
     avatar: "/api/placeholder/64/64",
-    role: "Marketing Manager",
-    department: "Marketing",
-    status: "online",
-    location: "Los Angeles, CA",
-    joinDate: "2023-06-12",
-    tasksCompleted: 76,
-    tasksInProgress: 9,
-    rating: 4.6,
-    bio: "Results-driven marketing manager with a passion for digital marketing and brand growth.",
-    skills: ["Digital Marketing", "Content Strategy", "Analytics", "SEO"],
-    projects: ["Brand Campaign", "Content Strategy", "Market Research"],
-    lastActive: "10 minutes ago",
-    isManager: true
-  },
-  {
-    id: "6",
-    name: "Eve Wilson",
-    email: "eve@company.com",
-    phone: "+1 (555) 678-9012",
-    avatar: "/api/placeholder/64/64",
-    role: "QA Engineer",
-    department: "Engineering",
-    status: "online",
-    location: "Chicago, IL",
-    joinDate: "2022-12-03",
-    tasksCompleted: 134,
+    initials: "FR",
+    joinDate: "2022-04-12",
+    skills: ["AWS", "Docker", "Kubernetes", "CI/CD"],
+    currentProjects: ["Infrastructure", "Security Audit"],
+    tasksCompleted: 112,
     tasksInProgress: 7,
-    rating: 4.8,
-    bio: "Detail-oriented QA engineer ensuring high-quality software delivery through comprehensive testing.",
-    skills: ["Test Automation", "Selenium", "API Testing", "Performance Testing"],
-    projects: ["Test Automation", "Quality Assurance", "Bug Tracking"],
-    lastActive: "15 minutes ago",
-    isManager: false
+    performance: 94,
+    lastActivity: "10 minutes ago",
+    timezone: "MST",
+    phone: "+1 (555) 678-9012",
+    birthday: "1989-12-25",
+    workload: 80
   }
 ]
 
-const departments = ["All", "Engineering", "Design", "Product", "Marketing", "Sales"]
-const roles = ["All", "Manager", "Senior", "Engineer", "Designer", "Analyst"]
+const statusColors = {
+  "Online": "bg-emerald-500 text-emerald-100",
+  "Away": "bg-amber-500 text-amber-100",
+  "In Meeting": "bg-blue-500 text-blue-100",
+  "Offline": "bg-gray-500 text-gray-100"
+}
+
+const departmentColors = {
+  "Engineering": "bg-blue-500/20 text-blue-400 border-blue-500/30",
+  "Design": "bg-purple-500/20 text-purple-400 border-purple-500/30",
+  "Management": "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+  "Quality Assurance": "bg-orange-500/20 text-orange-400 border-orange-500/30"
+}
 
 export default function TeamPage() {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [departmentFilter, setDepartmentFilter] = useState("All")
-  const [roleFilter, setRoleFilter] = useState("All")
-  const [selectedMember, setSelectedMember] = useState<typeof teamMembers[0] | null>(null)
+  const [selectedDepartment, setSelectedDepartment] = useState('all')
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "online": return "bg-green-500"
-      case "away": return "bg-yellow-500"
-      case "offline": return "bg-gray-500"
-      default: return "bg-gray-500"
-    }
+  const filteredMembers = selectedDepartment === 'all' 
+    ? teamMembers 
+    : teamMembers.filter(member => member.department.toLowerCase().replace(' ', '-') === selectedDepartment)
+
+  const getTeamStats = () => {
+    const total = teamMembers.length
+    const online = teamMembers.filter(member => member.status === "Online").length
+    const avgPerformance = Math.round(teamMembers.reduce((sum, member) => sum + member.performance, 0) / total)
+    const avgWorkload = Math.round(teamMembers.reduce((sum, member) => sum + member.workload, 0) / total)
+    
+    return { total, online, avgPerformance, avgWorkload }
   }
 
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case "online": return "Online"
-      case "away": return "Away"
-      case "offline": return "Offline"
-      default: return "Unknown"
-    }
-  }
-
-  const filteredMembers = teamMembers.filter(member => {
-    const matchesSearch = member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         member.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         member.role.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesDepartment = departmentFilter === "All" || member.department === departmentFilter
-    const matchesRole = roleFilter === "All" || member.role.toLowerCase().includes(roleFilter.toLowerCase())
-    return matchesSearch && matchesDepartment && matchesRole
-  })
-
-  const totalMembers = teamMembers.length
-  const onlineMembers = teamMembers.filter(m => m.status === "online").length
-  const avgRating = teamMembers.reduce((sum, member) => sum + member.rating, 0) / teamMembers.length
-  const totalTasksCompleted = teamMembers.reduce((sum, member) => sum + member.tasksCompleted, 0)
+  const stats = getTeamStats()
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Team</h1>
-          <p className="text-muted-foreground mt-1">Manage your team members and track their progress</p>
+          <h1 className="text-2xl font-bold text-white">Team</h1>
+          <p className="text-gray-400 mt-1">Manage your team members and track their performance</p>
         </div>
         <div className="flex items-center gap-3">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <Input
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
               placeholder="Search team members..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 w-64"
+              className="w-64 pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <Button variant="outline" size="sm">
-            <Filter className="w-4 h-4 mr-2" />
-            Filter
-          </Button>
-          <Button size="sm">
-            <Plus className="w-4 h-4 mr-2" />
-            Add Member
+          <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white">
+            <UserPlus className="w-4 h-4 mr-2" />
+            Invite Member
           </Button>
         </div>
       </div>
 
-      {/* Team Stats */}
-      <div className="grid gap-4 md:grid-cols-4">
-        <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="p-2 bg-blue-500/10 rounded-lg">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card className="bg-[#1a1a2e] border-white/10">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-blue-500/20 rounded-lg">
                 <Users className="w-5 h-5 text-blue-400" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-foreground">{totalMembers}</p>
-                <p className="text-sm text-muted-foreground">Total Members</p>
+                <p className="text-sm text-gray-400">Total Members</p>
+                <p className="text-2xl font-bold text-white">{stats.total}</p>
               </div>
             </div>
           </CardContent>
         </Card>
         
-        <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="p-2 bg-green-500/10 rounded-lg">
-                <Clock className="w-5 h-5 text-green-400" />
+        <Card className="bg-[#1a1a2e] border-white/10">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-emerald-500/20 rounded-lg">
+                <Activity className="w-5 h-5 text-emerald-400" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-foreground">{onlineMembers}</p>
-                <p className="text-sm text-muted-foreground">Online Now</p>
+                <p className="text-sm text-gray-400">Online Now</p>
+                <p className="text-2xl font-bold text-white">{stats.online}</p>
               </div>
             </div>
           </CardContent>
         </Card>
         
-        <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="p-2 bg-yellow-500/10 rounded-lg">
-                <Star className="w-5 h-5 text-yellow-400" />
+        <Card className="bg-[#1a1a2e] border-white/10">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-purple-500/20 rounded-lg">
+                <TrendingUp className="w-5 h-5 text-purple-400" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-foreground">{avgRating.toFixed(1)}</p>
-                <p className="text-sm text-muted-foreground">Avg Rating</p>
+                <p className="text-sm text-gray-400">Avg Performance</p>
+                <p className="text-2xl font-bold text-white">{stats.avgPerformance}%</p>
               </div>
             </div>
           </CardContent>
         </Card>
         
-        <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="p-2 bg-purple-500/10 rounded-lg">
-                <CheckCircle2 className="w-5 h-5 text-purple-400" />
+        <Card className="bg-[#1a1a2e] border-white/10">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-amber-500/20 rounded-lg">
+                <Clock className="w-5 h-5 text-amber-400" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-foreground">{totalTasksCompleted}</p>
-                <p className="text-sm text-muted-foreground">Tasks Completed</p>
+                <p className="text-sm text-gray-400">Avg Workload</p>
+                <p className="text-2xl font-bold text-white">{stats.avgWorkload}%</p>
               </div>
             </div>
           </CardContent>
@@ -277,213 +277,170 @@ export default function TeamPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <label className="text-sm font-medium text-foreground">Department:</label>
-          <select 
-            value={departmentFilter} 
-            onChange={(e) => setDepartmentFilter(e.target.value)}
-            className="px-3 py-1 rounded-md border border-border bg-background text-foreground text-sm"
+          <Button
+            variant={selectedDepartment === 'all' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setSelectedDepartment('all')}
+            className={selectedDepartment === 'all' ? 'bg-blue-500 text-white' : 'border-white/20 text-gray-300 hover:bg-white/10'}
           >
-            {departments.map(dept => (
-              <option key={dept} value={dept}>{dept}</option>
-            ))}
-          </select>
+            All Departments
+          </Button>
+          <Button
+            variant={selectedDepartment === 'engineering' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setSelectedDepartment('engineering')}
+            className={selectedDepartment === 'engineering' ? 'bg-blue-500 text-white' : 'border-white/20 text-gray-300 hover:bg-white/10'}
+          >
+            Engineering
+          </Button>
+          <Button
+            variant={selectedDepartment === 'design' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setSelectedDepartment('design')}
+            className={selectedDepartment === 'design' ? 'bg-blue-500 text-white' : 'border-white/20 text-gray-300 hover:bg-white/10'}
+          >
+            Design
+          </Button>
+          <Button
+            variant={selectedDepartment === 'management' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setSelectedDepartment('management')}
+            className={selectedDepartment === 'management' ? 'bg-blue-500 text-white' : 'border-white/20 text-gray-300 hover:bg-white/10'}
+          >
+            Management
+          </Button>
         </div>
         <div className="flex items-center gap-2">
-          <label className="text-sm font-medium text-foreground">Role:</label>
-          <select 
-            value={roleFilter} 
-            onChange={(e) => setRoleFilter(e.target.value)}
-            className="px-3 py-1 rounded-md border border-border bg-background text-foreground text-sm"
-          >
-            {roles.map(role => (
-              <option key={role} value={role}>{role}</option>
-            ))}
-          </select>
+          <Button variant="outline" size="sm" className="border-white/20 text-gray-300 hover:bg-white/10">
+            <Filter className="w-4 h-4" />
+          </Button>
         </div>
       </div>
 
       {/* Team Members Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {filteredMembers.map((member) => (
-          <Card 
-            key={member.id} 
-            className="border-border/50 bg-card/50 backdrop-blur-sm hover:shadow-lg transition-all duration-200 cursor-pointer"
-            onClick={() => setSelectedMember(member)}
-          >
-            <CardHeader className="pb-4">
-              <div className="flex items-start justify-between">
+          <Card key={member.id} className="bg-[#1a1a2e] border-white/10 hover:border-white/20 transition-all duration-300 group">
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="relative">
-                    <Avatar className="w-12 h-12">
-                      <AvatarImage src={member.avatar} />
-                      <AvatarFallback>
-                        {member.name.split(' ').map(n => n[0]).join('')}
+                    <Avatar className="w-16 h-16">
+                      <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white text-lg font-semibold">
+                        {member.initials}
                       </AvatarFallback>
                     </Avatar>
-                    <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-background ${getStatusColor(member.status)}`}></div>
+                    <div className={`absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-[#1a1a2e] ${
+                      member.status === "Online" ? "bg-emerald-500" :
+                      member.status === "Away" ? "bg-amber-500" :
+                      member.status === "In Meeting" ? "bg-blue-500" :
+                      "bg-gray-500"
+                    }`}></div>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-foreground">{member.name}</h3>
-                    <p className="text-sm text-muted-foreground">{member.role}</p>
+                    <h3 className="font-semibold text-white text-lg">{member.name}</h3>
+                    <p className="text-gray-400 text-sm">{member.role}</p>
+                    <Badge className={`${statusColors[member.status as keyof typeof statusColors]} text-xs mt-1`}>
+                      {member.status}
+                    </Badge>
                   </div>
                 </div>
-                <Button variant="ghost" size="sm">
-                  <MoreHorizontal className="w-4 h-4" />
+                <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                  <MoreHorizontal className="w-4 h-4 text-gray-400" />
                 </Button>
               </div>
-            </CardHeader>
-            
-            <CardContent className="space-y-4">
-              {/* Contact Info */}
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm">
-                  <Mail className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-foreground">{member.email}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <MapPin className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-foreground">{member.location}</span>
-                </div>
-              </div>
 
-              {/* Department and Status */}
-              <div className="flex items-center justify-between">
-                <Badge variant="outline" className="border-border/50">
-                  {member.department}
-                </Badge>
-                <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <div className={`w-2 h-2 rounded-full ${getStatusColor(member.status)}`}></div>
-                  {getStatusText(member.status)}
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <Badge className={`${departmentColors[member.department as keyof typeof departmentColors]} border text-xs px-2 py-1`}>
+                    {member.department}
+                  </Badge>
+                  <div className="flex items-center gap-1 text-xs text-gray-400">
+                    <MapPin className="w-3 h-3" />
+                    <span>{member.location}</span>
+                  </div>
                 </div>
-              </div>
 
-              {/* Performance Stats */}
-              <div className="grid grid-cols-2 gap-4 pt-2 border-t border-border/50">
-                <div className="text-center">
-                  <p className="text-lg font-semibold text-foreground">{member.tasksCompleted}</p>
-                  <p className="text-xs text-muted-foreground">Completed</p>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <p className="text-gray-400 text-xs">Tasks Completed</p>
+                    <p className="text-white font-medium">{member.tasksCompleted}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-xs">In Progress</p>
+                    <p className="text-white font-medium">{member.tasksInProgress}</p>
+                  </div>
                 </div>
-                <div className="text-center">
-                  <p className="text-lg font-semibold text-foreground">{member.tasksInProgress}</p>
-                  <p className="text-xs text-muted-foreground">In Progress</p>
-                </div>
-              </div>
 
-              {/* Rating */}
-              <div className="flex items-center justify-between pt-2">
-                <div className="flex items-center gap-1">
-                  <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                  <span className="text-sm font-medium text-foreground">{member.rating}</span>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-400">Performance</span>
+                    <span className="text-white font-medium">{member.performance}%</span>
+                  </div>
+                  <Progress value={member.performance} className="h-2" />
                 </div>
-                <span className="text-xs text-muted-foreground">{member.lastActive}</span>
-              </div>
 
-              {/* Action Buttons */}
-              <div className="flex gap-2 pt-2">
-                <Button variant="outline" size="sm" className="flex-1">
-                  <MessageSquare className="w-4 h-4 mr-1" />
-                  Message
-                </Button>
-                <Button variant="outline" size="sm" className="flex-1">
-                  <Calendar className="w-4 h-4 mr-1" />
-                  Schedule
-                </Button>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-400">Workload</span>
+                    <span className="text-white font-medium">{member.workload}%</span>
+                  </div>
+                  <Progress value={member.workload} className="h-2" />
+                </div>
+
+                <div className="space-y-2">
+                  <p className="text-gray-400 text-xs">Current Projects</p>
+                  <div className="flex flex-wrap gap-1">
+                    {member.currentProjects.slice(0, 2).map((project, index) => (
+                      <Badge key={index} variant="secondary" className="bg-white/10 text-gray-300 text-xs">
+                        {project}
+                      </Badge>
+                    ))}
+                    {member.currentProjects.length > 2 && (
+                      <Badge variant="secondary" className="bg-white/10 text-gray-300 text-xs">
+                        +{member.currentProjects.length - 2}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <p className="text-gray-400 text-xs">Skills</p>
+                  <div className="flex flex-wrap gap-1">
+                    {member.skills.slice(0, 3).map((skill, index) => (
+                      <Badge key={index} variant="outline" className="border-white/20 text-gray-300 text-xs">
+                        {skill}
+                      </Badge>
+                    ))}
+                    {member.skills.length > 3 && (
+                      <Badge variant="outline" className="border-white/20 text-gray-300 text-xs">
+                        +{member.skills.length - 3}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                  <div className="flex items-center gap-2 text-xs text-gray-400">
+                    <Clock className="w-3 h-3" />
+                    <span>{member.lastActivity}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button variant="ghost" size="sm" className="p-2 text-gray-400 hover:text-white">
+                      <Mail className="w-4 h-4" />
+                    </Button>
+                    <Button variant="ghost" size="sm" className="p-2 text-gray-400 hover:text-white">
+                      <Phone className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
         ))}
       </div>
-
-      {/* Member Detail Modal (simplified for this example) */}
-      {selectedMember && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <Card className="w-full max-w-2xl max-h-[80vh] overflow-y-auto">
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-4">
-                  <Avatar className="w-16 h-16">
-                    <AvatarImage src={selectedMember.avatar} />
-                    <AvatarFallback>
-                      {selectedMember.name.split(' ').map(n => n[0]).join('')}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h2 className="text-xl font-bold text-foreground">{selectedMember.name}</h2>
-                    <p className="text-muted-foreground">{selectedMember.role}</p>
-                    <Badge variant="outline" className="mt-1">
-                      {selectedMember.department}
-                    </Badge>
-                  </div>
-                </div>
-                <Button 
-                  variant="ghost" 
-                  onClick={() => setSelectedMember(null)}
-                >
-                  ×
-                </Button>
-              </div>
-            </CardHeader>
-            
-            <CardContent className="space-y-6">
-              {/* Bio */}
-              <div>
-                <h3 className="font-semibold text-foreground mb-2">About</h3>
-                <p className="text-muted-foreground">{selectedMember.bio}</p>
-              </div>
-
-              {/* Skills */}
-              <div>
-                <h3 className="font-semibold text-foreground mb-2">Skills</h3>
-                <div className="flex flex-wrap gap-2">
-                  {selectedMember.skills.map((skill) => (
-                    <Badge key={skill} variant="secondary">
-                      {skill}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-
-              {/* Projects */}
-              <div>
-                <h3 className="font-semibold text-foreground mb-2">Current Projects</h3>
-                <div className="space-y-2">
-                  {selectedMember.projects.map((project) => (
-                    <div key={project} className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-primary rounded-full"></div>
-                      <span className="text-foreground">{project}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Contact Details */}
-              <div>
-                <h3 className="font-semibold text-foreground mb-2">Contact Information</h3>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-3">
-                    <Mail className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-foreground">{selectedMember.email}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Phone className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-foreground">{selectedMember.phone}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <MapPin className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-foreground">{selectedMember.location}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Calendar className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-foreground">Joined {selectedMember.joinDate}</span>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
     </div>
   )
 }

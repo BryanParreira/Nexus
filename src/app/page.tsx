@@ -1,462 +1,318 @@
-// app/dashboard/page.tsx
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+// src/app/page.tsx
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 import { 
-  FolderOpen, 
-  CheckSquare, 
-  Users, 
-  Clock,
-  TrendingUp,
-  Calendar,
-  Plus,
   ArrowRight,
-  Star,
-  AlertTriangle,
+  CheckCircle,
+  Users,
   BarChart3,
-  Target
-} from "lucide-react"
-import Link from "next/link"
+  Calendar,
+  Shield,
+  Zap,
+  Globe,
+  Star,
+  PlayCircle
+} from 'lucide-react'
 
-// Mock dashboard data
-const dashboardStats = {
-  totalProjects: 12,
-  activeProjects: 8,
-  completedTasks: 156,
-  totalTasks: 198,
-  teamMembers: 15,
-  upcomingDeadlines: 7
-}
-
-const recentProjects = [
+const features = [
   {
-    id: 1,
-    name: "Website Redesign",
-    status: "In Progress",
-    progress: 75,
-    team: [
-      { name: "Alice", avatar: "/api/placeholder/32/32" },
-      { name: "Bob", avatar: "/api/placeholder/32/32" },
-      { name: "Charlie", avatar: "/api/placeholder/32/32" }
-    ],
-    dueDate: "2025-03-30",
-    priority: "High"
+    icon: Users,
+    title: "Team Collaboration",
+    description: "Work together seamlessly with real-time collaboration tools and team management features."
   },
   {
-    id: 2,
-    name: "Mobile App Development",
-    status: "In Review",
-    progress: 90,
-    team: [
-      { name: "Diana", avatar: "/api/placeholder/32/32" },
-      { name: "Eve", avatar: "/api/placeholder/32/32" }
-    ],
-    dueDate: "2025-03-25",
-    priority: "Medium"
+    icon: BarChart3,
+    title: "Advanced Analytics",
+    description: "Get insights into your project performance with detailed analytics and reporting."
   },
   {
-    id: 3,
-    name: "Marketing Campaign",
-    status: "Planning",
-    progress: 25,
-    team: [
-      { name: "Frank", avatar: "/api/placeholder/32/32" },
-      { name: "Grace", avatar: "/api/placeholder/32/32" }
-    ],
-    dueDate: "2025-04-15",
-    priority: "Low"
+    icon: Calendar,
+    title: "Smart Scheduling",
+    description: "Intelligent scheduling and timeline management to keep your projects on track."
+  },
+  {
+    icon: Shield,
+    title: "Enterprise Security",
+    description: "Bank-grade security with end-to-end encryption and advanced access controls."
+  },
+  {
+    icon: Zap,
+    title: "Lightning Fast",
+    description: "Optimized for speed and performance, so you can focus on what matters most."
+  },
+  {
+    icon: Globe,
+    title: "Global Access",
+    description: "Access your projects from anywhere in the world with our cloud-based platform."
   }
 ]
 
-const recentTasks = [
+const testimonials = [
   {
-    id: "1",
-    title: "User Authentication System",
-    status: "In Progress",
-    priority: "High",
-    assignee: { name: "Alice Johnson", avatar: "/api/placeholder/32/32" },
-    dueDate: "2025-03-28",
-    progress: 60
+    quote: "ProjectFlow has transformed how our team manages projects. The interface is intuitive and powerful.",
+    author: "Sarah Chen",
+    role: "Engineering Manager",
+    company: "TechCorp"
   },
   {
-    id: "2", 
-    title: "Database Optimization",
-    status: "In Review",
-    priority: "High", 
-    assignee: { name: "Diana Prince", avatar: "/api/placeholder/32/32" },
-    dueDate: "2025-03-30",
-    progress: 85
+    quote: "The analytics and reporting features have given us insights we never had before. Highly recommended!",
+    author: "Michael Rodriguez",
+    role: "Product Manager", 
+    company: "StartupXYZ"
   },
   {
-    id: "3",
-    title: "Mobile Responsive Design", 
-    status: "To Do",
-    priority: "Medium",
-    assignee: { name: "Bob Smith", avatar: "/api/placeholder/32/32" },
-    dueDate: "2025-04-02", 
-    progress: 0
+    quote: "Best project management tool we've used. The team collaboration features are game-changing.",
+    author: "Emily Watson",
+    role: "Creative Director",
+    company: "DesignStudio"
   }
 ]
 
-const upcomingEvents = [
-  {
-    id: "1",
-    title: "Team Standup",
-    time: "9:00 AM",
-    date: "Today",
-    attendees: 5,
-    type: "meeting"
-  },
-  {
-    id: "2", 
-    title: "Product Review",
-    time: "2:00 PM",
-    date: "Tomorrow",
-    attendees: 8,
-    type: "review"
-  },
-  {
-    id: "3",
-    title: "Client Presentation", 
-    time: "10:00 AM",
-    date: "Mar 26",
-    attendees: 3,
-    type: "presentation"
-  }
-]
-
-const teamActivity = [
-  {
-    id: "1",
-    user: { name: "Sarah Johnson", avatar: "/api/placeholder/32/32" },
-    action: "completed task",
-    target: "Homepage wireframes",
-    time: "2 hours ago"
-  },
-  {
-    id: "2",
-    user: { name: "Mike Chen", avatar: "/api/placeholder/32/32" },
-    action: "created project", 
-    target: "Q2 Planning",
-    time: "4 hours ago"
-  },
-  {
-    id: "3",
-    user: { name: "Emily Davis", avatar: "/api/placeholder/32/32" },
-    action: "updated status",
-    target: "API Integration", 
-    time: "6 hours ago"
-  }
-]
-
-export default function DashboardPage() {
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "High": return "priority-high"
-      case "Medium": return "priority-medium" 
-      case "Low": return "priority-low"
-      default: return "bg-slate-500/10 text-slate-400 border-slate-500/20"
-    }
-  }
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "In Progress": return "bg-blue-500/15 text-blue-400 border-blue-500/30"
-      case "In Review": return "bg-purple-500/15 text-purple-400 border-purple-500/30"
-      case "Planning": return "bg-amber-500/15 text-amber-400 border-amber-500/30"
-      case "To Do": return "bg-slate-500/15 text-slate-400 border-slate-500/30"
-      default: return "bg-slate-500/15 text-slate-400 border-slate-500/30"
-    }
-  }
-
+export default function HomePage() {
   return (
-    <div className="p-6 space-y-6">
-      {/* Welcome Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Good morning, Sofia! 👋</h1>
-          <p className="text-muted-foreground mt-1">Here's what's happening with your projects today.</p>
+    <div className="min-h-screen bg-[#0f0f23] text-white">
+      {/* Navigation */}
+      <nav className="border-b border-white/10 bg-[#0f0f23]/80 backdrop-blur-xl sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <BarChart3 className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-xl font-bold text-white">ProjectFlow</span>
+            </div>
+            
+            <div className="hidden md:flex items-center gap-8">
+              <Link href="#features" className="text-gray-300 hover:text-white transition-colors">
+                Features
+              </Link>
+              <Link href="#pricing" className="text-gray-300 hover:text-white transition-colors">
+                Pricing
+              </Link>
+              <Link href="#about" className="text-gray-300 hover:text-white transition-colors">
+                About
+              </Link>
+              <Link href="#contact" className="text-gray-300 hover:text-white transition-colors">
+                Contact
+              </Link>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <Link href="/auth/login">
+                <Button variant="ghost" className="text-white hover:bg-white/10">
+                  Sign In
+                </Button>
+              </Link>
+              <Link href="/dashboard">
+                <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg">
+                  Get Started
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
-        <div className="flex gap-3">
-          <Link href="/dashboard/calendar">
-            <Button variant="outline" size="sm" className="btn-glass">
-              <Calendar className="w-4 h-4 mr-2" />
-              View Calendar
-            </Button>
-          </Link>
-          <Link href="/dashboard/projects">
-            <Button size="sm" className="btn-modern">
-              <Plus className="w-4 h-4 mr-2" />
-              New Project
-            </Button>
-          </Link>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="py-20 lg:py-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full text-blue-400 text-sm font-medium mb-8">
+              <Star className="w-4 h-4" />
+              Trusted by 10,000+ teams worldwide
+            </div>
+            
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6">
+              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400 bg-clip-text text-transparent">
+                Project Management
+              </span>
+              <br />
+              <span className="text-white">Made Simple</span>
+            </h1>
+            
+            <p className="text-xl md:text-2xl text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed">
+              Streamline your workflow, collaborate with your team, and deliver projects on time with our powerful project management platform.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link href="/dashboard">
+                <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold shadow-2xl hover:shadow-blue-500/25 transition-all duration-300">
+                  Start Free Trial
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </Link>
+              <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10 px-8 py-4 text-lg">
+                <PlayCircle className="w-5 h-5 mr-2" />
+                Watch Demo
+              </Button>
+            </div>
+            
+            <div className="mt-12 flex items-center justify-center gap-8 text-sm text-gray-400">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-emerald-400" />
+                No credit card required
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-emerald-400" />
+                14-day free trial
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-emerald-400" />
+                Cancel anytime
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
-      {/* Stats Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Link href="/dashboard/projects">
-          <Card className="card-modern cursor-pointer hover:shadow-lg transition-all duration-200">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-foreground">
-                Total Projects
-              </CardTitle>
-              <FolderOpen className="h-4 w-4 text-blue-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-foreground">{dashboardStats.totalProjects}</div>
-              <div className="flex items-center justify-between mt-1">
-                <p className="text-xs text-muted-foreground">
-                  {dashboardStats.activeProjects} active
-                </p>
-                <div className="flex items-center text-xs text-emerald-400">
-                  <TrendingUp className="w-3 h-3 mr-1" />
-                  +12%
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
+      {/* Features Section */}
+      <section id="features" className="py-20 bg-[#1a1a2e]/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
+              Everything you need to succeed
+            </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Powerful features designed to help teams of all sizes manage projects more effectively
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <Card key={index} className="bg-[#1a1a2e] border-white/10 hover:border-white/20 transition-all duration-300 group">
+                <CardContent className="p-8">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <feature.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-4">{feature.title}</h3>
+                  <p className="text-gray-400 leading-relaxed">{feature.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
 
-        <Link href="/dashboard/tasks">
-          <Card className="card-modern cursor-pointer hover:shadow-lg transition-all duration-200">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-foreground">
-                Tasks Completed
-              </CardTitle>
-              <CheckSquare className="h-4 w-4 text-emerald-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-foreground">{dashboardStats.completedTasks}</div>
-              <div className="flex items-center justify-between mt-1">
-                <p className="text-xs text-muted-foreground">
-                  {dashboardStats.totalTasks} total tasks
-                </p>
-                <div className="flex items-center text-xs text-emerald-400">
-                  <TrendingUp className="w-3 h-3 mr-1" />
-                  +8%
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
+      {/* Testimonials Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
+              Loved by teams everywhere
+            </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              See what our customers have to say about ProjectFlow
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <Card key={index} className="bg-[#1a1a2e] border-white/10 hover:border-white/20 transition-all duration-300">
+                <CardContent className="p-8">
+                  <div className="flex items-center gap-1 mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <blockquote className="text-gray-300 mb-6 leading-relaxed">
+                    "{testimonial.quote}"
+                  </blockquote>
+                  <div>
+                    <div className="font-semibold text-white">{testimonial.author}</div>
+                    <div className="text-sm text-gray-400">{testimonial.role} at {testimonial.company}</div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
 
-        <Link href="/dashboard/team">
-          <Card className="card-modern cursor-pointer hover:shadow-lg transition-all duration-200">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-foreground">
-                Team Members
-              </CardTitle>
-              <Users className="h-4 w-4 text-purple-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-foreground">{dashboardStats.teamMembers}</div>
-              <div className="flex items-center justify-between mt-1">
-                <p className="text-xs text-muted-foreground">
-                  Active members
-                </p>
-                <div className="flex items-center text-xs text-emerald-400">
-                  <TrendingUp className="w-3 h-3 mr-1" />
-                  +2
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link href="/dashboard/calendar">
-          <Card className="card-modern cursor-pointer hover:shadow-lg transition-all duration-200">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-foreground">
-                Upcoming Deadlines
-              </CardTitle>
-              <Clock className="h-4 w-4 text-amber-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-foreground">{dashboardStats.upcomingDeadlines}</div>
-              <div className="flex items-center justify-between mt-1">
-                <p className="text-xs text-muted-foreground">
-                  This week
-                </p>
-                <div className="flex items-center text-xs text-amber-400">
-                  <AlertTriangle className="w-3 h-3 mr-1" />
-                  3 urgent
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-      </div>
-
-      {/* Main Content Grid */}
-      <div className="grid gap-6 lg:grid-cols-3">
-        {/* Recent Projects */}
-        <Card className="lg:col-span-2 card-modern">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-foreground">Recent Projects</CardTitle>
-            <Link href="/dashboard/projects">
-              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-                View all <ArrowRight className="w-4 h-4 ml-1" />
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-600">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
+            Ready to transform your workflow?
+          </h2>
+          <p className="text-xl text-blue-100 mb-10">
+            Join thousands of teams who have already improved their productivity with ProjectFlow
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link href="/dashboard">
+              <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold shadow-2xl">
+                Start Your Free Trial
+                <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </Link>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentProjects.map((project) => (
-                <div key={project.id} className="p-4 rounded-xl border border-border/50 bg-background/50 hover:bg-accent/20 transition-colors">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 bg-primary rounded-full"></div>
-                      <h3 className="font-medium text-foreground">{project.name}</h3>
-                      <Badge className={getPriorityColor(project.priority)}>
-                        {project.priority}
-                      </Badge>
-                    </div>
-                    <span className="text-xs text-muted-foreground">{project.dueDate}</span>
-                  </div>
-                  
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex -space-x-2">
-                      {project.team.slice(0, 3).map((member, index) => (
-                        <Avatar key={index} className="w-6 h-6 border-2 border-background">
-                          <AvatarImage src={member.avatar} />
-                          <AvatarFallback className="text-xs">{member.name[0]}</AvatarFallback>
-                        </Avatar>
-                      ))}
-                      {project.team.length > 3 && (
-                        <div className="w-6 h-6 rounded-full bg-muted border-2 border-background flex items-center justify-center">
-                          <span className="text-xs text-muted-foreground">+{project.team.length - 3}</span>
-                        </div>
-                      )}
-                    </div>
-                    <Badge className={getStatusColor(project.status)}>
-                      {project.status}
-                    </Badge>
-                  </div>
-                  
-                  <div className="flex items-center gap-3">
-                    <div className="flex-1 bg-secondary rounded-full h-2">
-                      <div 
-                        className="bg-primary h-2 rounded-full transition-all"
-                        style={{ width: `${project.progress}%` }}
-                      ></div>
-                    </div>
-                    <span className="text-sm font-medium text-foreground">{project.progress}%</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Right Sidebar */}
-        <div className="space-y-6">
-          {/* Today's Schedule */}
-          <Card className="card-modern">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-foreground">Today's Schedule</CardTitle>
-              <Link href="/dashboard/calendar">
-                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {upcomingEvents.map((event) => (
-                  <div key={event.id} className="flex items-center gap-3 p-3 rounded-lg bg-background/50 hover:bg-accent/20 transition-colors">
-                    <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                    <div className="flex-1">
-                      <div className="font-medium text-sm text-foreground">{event.title}</div>
-                      <div className="text-xs text-muted-foreground">{event.attendees} attendees</div>
-                    </div>
-                    <div className="text-sm font-medium text-foreground">{event.time}</div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Recent Tasks */}
-          <Card className="card-modern">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-foreground">Recent Tasks</CardTitle>
-              <Link href="/dashboard/tasks">
-                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {recentTasks.map((task) => (
-                  <div key={task.id} className="p-3 rounded-lg bg-background/50 hover:bg-accent/20 transition-colors">
-                    <div className="flex items-start gap-3">
-                      <div className="flex items-center gap-2 mt-1">
-                        <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-foreground line-clamp-1">
-                          {task.title}
-                        </p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <Avatar className="w-4 h-4">
-                            <AvatarImage src={task.assignee.avatar} />
-                            <AvatarFallback className="text-xs">{task.assignee.name[0]}</AvatarFallback>
-                          </Avatar>
-                          <span className="text-xs text-muted-foreground">{task.assignee.name}</span>
-                        </div>
-                        <div className="flex items-center gap-2 mt-2">
-                          <div className="flex-1 bg-secondary rounded-full h-1">
-                            <div 
-                              className="bg-primary h-1 rounded-full transition-all"
-                              style={{ width: `${task.progress}%` }}
-                            ></div>
-                          </div>
-                          <span className="text-xs text-muted-foreground">{task.progress}%</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Team Activity */}
-          <Card className="card-modern">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-foreground">Team Activity</CardTitle>
-              <Link href="/dashboard/team">
-                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {teamActivity.map((activity) => (
-                  <div key={activity.id} className="flex items-start gap-3">
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage src={activity.user.avatar} />
-                      <AvatarFallback className="text-xs">{activity.user.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm text-foreground">
-                        <span className="font-medium">{activity.user.name}</span>
-                        <span className="text-muted-foreground"> {activity.action} </span>
-                        <span className="font-medium text-primary">{activity.target}</span>
-                      </p>
-                      <p className="text-xs text-muted-foreground">{activity.time}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+            <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10 px-8 py-4 text-lg">
+              Contact Sales
+            </Button>
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-[#1a1a2e] border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="col-span-1 md:col-span-2">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                  <BarChart3 className="w-4 h-4 text-white" />
+                </div>
+                <span className="text-xl font-bold text-white">ProjectFlow</span>
+              </div>
+              <p className="text-gray-400 mb-6 max-w-md">
+                The ultimate project management platform for modern teams. Streamline your workflow and deliver projects on time.
+              </p>
+              <div className="flex items-center gap-4">
+                <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors cursor-pointer">
+                  <span className="text-white text-sm">f</span>
+                </div>
+                <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors cursor-pointer">
+                  <span className="text-white text-sm">t</span>
+                </div>
+                <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors cursor-pointer">
+                  <span className="text-white text-sm">in</span>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h3 className="text-white font-semibold mb-4">Product</h3>
+              <div className="space-y-2">
+                <Link href="#" className="block text-gray-400 hover:text-white transition-colors">Features</Link>
+                <Link href="#" className="block text-gray-400 hover:text-white transition-colors">Pricing</Link>
+                <Link href="#" className="block text-gray-400 hover:text-white transition-colors">Security</Link>
+                <Link href="#" className="block text-gray-400 hover:text-white transition-colors">Enterprise</Link>
+              </div>
+            </div>
+            
+            <div>
+              <h3 className="text-white font-semibold mb-4">Company</h3>
+              <div className="space-y-2">
+                <Link href="#" className="block text-gray-400 hover:text-white transition-colors">About</Link>
+                <Link href="#" className="block text-gray-400 hover:text-white transition-colors">Blog</Link>
+                <Link href="#" className="block text-gray-400 hover:text-white transition-colors">Careers</Link>
+                <Link href="#" className="block text-gray-400 hover:text-white transition-colors">Contact</Link>
+              </div>
+            </div>
+          </div>
+          
+          <div className="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between">
+            <p className="text-gray-400 text-sm">
+              © 2025 ProjectFlow. All rights reserved.
+            </p>
+            <div className="flex items-center gap-6 mt-4 md:mt-0">
+              <Link href="#" className="text-gray-400 hover:text-white transition-colors text-sm">Privacy Policy</Link>
+              <Link href="#" className="text-gray-400 hover:text-white transition-colors text-sm">Terms of Service</Link>
+              <Link href="#" className="text-gray-400 hover:text-white transition-colors text-sm">Cookie Policy</Link>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
