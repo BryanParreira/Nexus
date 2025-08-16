@@ -8,7 +8,7 @@ import { EventCalendar } from "@/components/event-calendar/event-calendar";
 import {
   type CalendarEvent,
   type EventColor,
-} from "@/components/event-calendar/calendar-context";
+} from "@/components/event-calendar";
 
 // Etiquettes data for calendar filtering
 export const etiquettes = [

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function SchemaPage() {
   return (
     <div className="min-h-screen flex flex-col bg-[#0a0a0a]">
-      <Header />
+      
       <SchemaVisualizer />
     </div>
   );

@@ -14,9 +14,9 @@ import {
 import "@xyflow/react/dist/base.css";
 import { RiAddLine, RiSubtractLine, RiFullscreenLine } from "@remixicon/react";
 import { Button } from "@/components/ui/button";
-import TableNode from "@/components/table-node";
-import SchemaEdge from "@/components/schema-edge";
-import { initialNodes, initialEdges } from "@/lib/schema-data";
+import TableNode from "../components/table-node";
+import SchemaEdge from "../components/schema-edge";
+import { initialNodes, initialEdges } from "../lib/schema-data";
 
 // Register custom node types and edge types
 const nodeTypes = {

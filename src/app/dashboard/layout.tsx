@@ -24,8 +24,14 @@ import {
   FileText,
   Filter,
   Grid3X3,
-  List
+  List,
+  ChartArea,
+  Icon,
+  MessageSquare,
+  ChartAreaIcon
 } from 'lucide-react'
+import Chat from '@/components/chat'
+import { ChatMessage } from '@/components/chat-message'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -33,11 +39,12 @@ const navigation = [
   { name: 'Schema', href: '/dashboard/schema', icon: FileText },
   { name: 'Calendar', href: '/dashboard/calendar', icon: Calendar },
   { name: 'Tasks', href: '/dashboard/tasks', icon: CheckSquare, badge: 3 },
+  { name: 'Chat', href: '/dashboard/chat', icon: MessageSquare },
 ]
 
 const secondaryNavigation = [
   { name: 'Team', href: '/dashboard/team', icon: Users },
-  { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
+  
   { name: 'Settings', href: '/dashboard/settings', icon: Settings },
 ]
 
