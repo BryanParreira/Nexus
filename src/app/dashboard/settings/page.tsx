@@ -848,35 +848,7 @@ export default function SettingsPage() {
       </Card>
 
       {/* Color Accent */}
-      <Card className="bg-[#111111] border-white/10">
-        <CardHeader>
-          <CardTitle className="text-white text-lg">Accent Color</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-6 gap-3">
-            {[
-              { name: 'Blue', color: 'bg-blue-500', selected: true },
-              { name: 'Purple', color: 'bg-purple-500', selected: false },
-              { name: 'Green', color: 'bg-emerald-500', selected: false },
-              { name: 'Orange', color: 'bg-orange-500', selected: false },
-              { name: 'Pink', color: 'bg-pink-500', selected: false },
-              { name: 'Red', color: 'bg-red-500', selected: false }
-            ].map((accent) => (
-              <button
-                key={accent.name}
-                className={`w-12 h-12 rounded-lg ${accent.color} relative transition-transform hover:scale-110 ${
-                  accent.selected ? 'ring-2 ring-white ring-offset-2 ring-offset-black' : ''
-                }`}
-                onClick={() => setIsDirty(true)}
-              >
-                {accent.selected && (
-                  <CheckCircle className="w-4 h-4 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-                )}
-              </button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      
     </div>
   );
 
