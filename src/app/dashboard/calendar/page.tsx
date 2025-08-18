@@ -1,28 +1,20 @@
+// app/dashboard/calendar/page.tsx
 import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Experiment 06 - Crafted.is",
-};
-
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { CalendarProvider } from "@/components/event-calendar/calendar-context";
 import BigCalendar from "@/components/big-calendar";
 
-const DashboardPage: React.FC = () => {
-  return (
-    <SidebarProvider>
-      <CalendarProvider>
-        <div className="flex h-screen w-full">
+export const metadata: Metadata = {
+  title: "Calendar - Dashboard",
+};
 
-          <SidebarInset>
-            <div className="flex flex-1 flex-col gap-4 p-2 pt-0">
-              <BigCalendar />
-            </div>
-          </SidebarInset>
-        </div>
-      </CalendarProvider>
-    </SidebarProvider>
+const CalendarPage: React.FC = () => {
+  return (
+    <CalendarProvider>
+      <div className="h-screen w-full bg-[#111111]">
+        <BigCalendar />
+      </div>
+    </CalendarProvider>
   );
 };
 
-export default DashboardPage;
+export default CalendarPage;
