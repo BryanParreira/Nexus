@@ -1,7 +1,6 @@
 // app/dashboard/settings/page.tsx
 "use client";
 
-import type { Metadata } from "next";
 import { useState } from "react";
 import {
   Breadcrumb,
@@ -12,12 +11,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -30,12 +24,7 @@ import {
   Shield,
   Palette,
   CreditCard,
-  Settings,
-  Eye,
-  EyeOff,
   Camera,
-  Edit,
-  ArrowRight,
   CheckCircle,
   Mail,
   Phone,
@@ -45,9 +34,7 @@ import {
   Monitor,
   Volume2,
   Smartphone,
-  Lock,
-  Key,
-  AlertTriangle
+  ArrowRight
 } from "lucide-react";
 
 const settingsCategories = [
@@ -102,7 +89,6 @@ const Toggle = ({ checked, onToggle, disabled = false }) => (
 export default function SettingsPage() {
   const [activeCategory, setActiveCategory] = useState("profile");
   const [isDirty, setIsDirty] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(true);
   const [soundNotifications, setSoundNotifications] = useState(false);
@@ -370,103 +356,98 @@ export default function SettingsPage() {
   };
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <div className="w-full h-full">
-          <header className="flex flex-wrap gap-3 min-h-20 py-4 px-4 md:px-6 lg:px-8 shrink-0 items-center transition-all ease-linear border-b">
-            {/* Left side */}
-            <div className="flex flex-1 items-center gap-2">
-              <SidebarTrigger className="-ms-1" />
-              <div className="max-lg:hidden lg:contents">
-                <Separator
-                  orientation="vertical"
-                  className="me-2 data-[orientation=vertical]:h-4"
-                />
-                <Breadcrumb>
-                  <BreadcrumbList>
-                    <BreadcrumbItem className="hidden md:block">
-                      <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator className="hidden md:block" />
-                    <BreadcrumbItem>
-                      <BreadcrumbPage>Settings</BreadcrumbPage>
-                    </BreadcrumbItem>
-                  </BreadcrumbList>
-                </Breadcrumb>
-              </div>
-            </div>
-            {/* Right side */}
-            {isDirty && (
-              <div className="flex items-center gap-3">
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => setIsDirty(false)}
-                  className="border-white/20 text-gray-300 hover:bg-white/10"
-                >
-                  <X className="w-4 h-4 mr-2" />
-                  Discard
-                </Button>
-                <Button 
-                  size="sm"
-                  onClick={handleSave}
-                  className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-                >
-                  <Save className="w-4 h-4 mr-2" />
-                  Save Changes
-                </Button>
-              </div>
-            )}
-          </header>
-          
-          <div className="p-4 md:p-6 lg:p-8">
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
-              <p className="text-gray-400">Manage your account settings and preferences</p>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              {/* Sidebar Navigation */}
-              <div className="lg:col-span-3">
-                <Card className="bg-white/5 border-white/10 sticky top-6">
-                  <CardContent className="p-4">
-                    <nav className="space-y-2">
-                      {settingsCategories.map((category) => (
-                        <button
-                          key={category.id}
-                          onClick={() => setActiveCategory(category.id)}
-                          className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all text-left ${
-                            activeCategory === category.id
-                              ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
-                              : 'text-gray-300 hover:bg-white/10 hover:text-white'
-                          }`}
-                        >
-                          <category.icon className="w-5 h-5" />
-                          <div className="flex-1">
-                            <div className="font-medium">{category.title}</div>
-                            <div className="text-xs text-gray-400 mt-0.5">
-                              {category.description}
-                            </div>
-                          </div>
-                          <ArrowRight className={`w-4 h-4 transition-transform ${
-                            activeCategory === category.id ? 'rotate-90' : ''
-                          }`} />
-                        </button>
-                      ))}
-                    </nav>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Main Content */}
-              <div className="lg:col-span-9">
-                {renderContent()}
-              </div>
-            </div>
+    <div className="w-full h-full bg-black">
+      <header className="flex flex-wrap gap-3 min-h-20 py-4 px-4 md:px-6 lg:px-8 shrink-0 items-center transition-all ease-linear border-b border-gray-800 bg-black">
+        {/* Left side */}
+        <div className="flex flex-1 items-center gap-2">
+          <SidebarTrigger className="-ms-1" />
+          <div className="max-lg:hidden lg:contents">
+            <Separator
+              orientation="vertical"
+              className="me-2 data-[orientation=vertical]:h-4"
+            />
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem className="hidden md:block">
+                  <BreadcrumbLink href="/">Dashboard</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Settings</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
           </div>
         </div>
-      </SidebarInset>
-    </SidebarProvider>
+        {/* Right side */}
+        {isDirty && (
+          <div className="flex items-center gap-3">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setIsDirty(false)}
+              className="border-white/20 text-gray-300 hover:bg-white/10"
+            >
+              <X className="w-4 h-4 mr-2" />
+              Discard
+            </Button>
+            <Button 
+              size="sm"
+              onClick={handleSave}
+              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              Save Changes
+            </Button>
+          </div>
+        )}
+      </header>
+      
+      <div className="p-4 md:p-6 lg:p-8 bg-black">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
+          <p className="text-gray-400">Manage your account settings and preferences</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Sidebar Navigation */}
+          <div className="lg:col-span-3">
+            <Card className="bg-white/5 border-white/10 sticky top-6">
+              <CardContent className="p-4">
+                <nav className="space-y-2">
+                  {settingsCategories.map((category) => (
+                    <button
+                      key={category.id}
+                      onClick={() => setActiveCategory(category.id)}
+                      className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all text-left ${
+                        activeCategory === category.id
+                          ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                          : 'text-gray-300 hover:bg-white/10 hover:text-white'
+                      }`}
+                    >
+                      <category.icon className="w-5 h-5" />
+                      <div className="flex-1">
+                        <div className="font-medium">{category.title}</div>
+                        <div className="text-xs text-gray-400 mt-0.5">
+                          {category.description}
+                        </div>
+                      </div>
+                      <ArrowRight className={`w-4 h-4 transition-transform ${
+                        activeCategory === category.id ? 'rotate-90' : ''
+                      }`} />
+                    </button>
+                  ))}
+                </nav>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Main Content */}
+          <div className="lg:col-span-9">
+            {renderContent()}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

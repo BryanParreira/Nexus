@@ -1,3 +1,6 @@
+"use client";
+
+import { useRouter } from 'next/navigation';
 import {
   RiExpandUpDownLine,
   RiUserLine,
@@ -29,6 +32,17 @@ export function NavUser({
     avatar: string;
   };
 }) {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    // Clear auth data from localStorage
+    localStorage.removeItem('auth-token');
+    localStorage.removeItem('user');
+    
+    // Redirect to signin page
+    router.push('/auth/signin');
+  };
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -76,7 +90,10 @@ export function NavUser({
                 />
                 Upgrade
               </DropdownMenuItem>
-              <DropdownMenuItem className="gap-3 focus:bg-sidebar-accent">
+              <DropdownMenuItem 
+                className="gap-3 focus:bg-sidebar-accent cursor-pointer"
+                onClick={handleLogout}
+              >
                 <RiLogoutCircleLine
                   size={20}
                   className="size-5 text-muted-foreground/80"
