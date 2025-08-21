@@ -13,18 +13,303 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ContactsTable from "@/components/contacts-table";
 import { StatsGrid } from "@/components/stats-grid";
+import { toast } from "sonner";
 import { 
   Plus,
-  Filter,
   Download,
   Settings,
   Users,
-  Search
+  FileText,
+  FileSpreadsheet,
+  Image,
+  Mail,
+  Phone,
+  MapPin,
+  Building,
+  Calendar,
+  Globe,
+  Bell,
+  Shield,
+  Palette,
+  Database,
+  UserPlus,
+  Trash2,
+  Edit,
+  Upload
 } from 'lucide-react';
+import { useState } from 'react';
+
+interface NewContact {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  company: string;
+  position: string;
+  location: string;
+  notes: string;
+  tags: string[];
+  priority: 'low' | 'medium' | 'high';
+}
+
+interface TeamSettings {
+  autoSync: boolean;
+  notifications: boolean;
+  emailUpdates: boolean;
+  dataBackup: boolean;
+  shareContacts: boolean;
+  exportFormat: 'csv' | 'xlsx' | 'json';
+  theme: 'light' | 'dark' | 'auto';
+  itemsPerPage: number;
+  defaultView: 'table' | 'grid' | 'list';
+}
 
 export default function Page() {
+  const [isAddContactOpen, setIsAddContactOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [currentTagInput, setCurrentTagInput] = useState('');
+
+  // New Contact state
+  const [newContact, setNewContact] = useState<NewContact>({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    company: '',
+    position: '',
+    location: '',
+    notes: '',
+    tags: [],
+    priority: 'medium'
+  });
+
+  // Settings state
+  const [teamSettings, setTeamSettings] = useState<TeamSettings>({
+    autoSync: true,
+    notifications: true,
+    emailUpdates: false,
+    dataBackup: true,
+    shareContacts: true,
+    exportFormat: 'csv',
+    theme: 'dark',
+    itemsPerPage: 25,
+    defaultView: 'table'
+  });
+
+  // Sample team data for export
+  const sampleTeamData = [
+    { id: 1, firstName: 'John', lastName: 'Doe', email: 'john@example.com', phone: '+1-555-0123', company: 'Acme Corp', position: 'Manager', location: 'New York', priority: 'high' },
+    { id: 2, firstName: 'Jane', lastName: 'Smith', email: 'jane@example.com', phone: '+1-555-0124', company: 'Tech Inc', position: 'Developer', location: 'San Francisco', priority: 'medium' },
+    { id: 3, firstName: 'Mike', lastName: 'Johnson', email: 'mike@example.com', phone: '+1-555-0125', company: 'Design Co', position: 'Designer', location: 'Los Angeles', priority: 'low' },
+  ];
+
+  // Export functionality
+  const handleExportCSV = () => {
+    const csvHeaders = 'First Name,Last Name,Email,Phone,Company,Position,Location,Priority\n';
+    const csvData = sampleTeamData.map(contact => 
+      `${contact.firstName},${contact.lastName},${contact.email},${contact.phone},${contact.company},${contact.position},${contact.location},${contact.priority}`
+    ).join('\n');
+    
+    const blob = new Blob([csvHeaders + csvData], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `team-contacts-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    toast.success("Team Exported", {
+      description: "Team contacts have been exported to CSV successfully.",
+    });
+  };
+
+  const handleExportExcel = () => {
+    // Simulate Excel export (would require xlsx library in real implementation)
+    const jsonData = JSON.stringify(sampleTeamData, null, 2);
+    const blob = new Blob([jsonData], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `team-contacts-${new Date().toISOString().split('T')[0]}.xlsx`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    toast.success("Team Exported", {
+      description: "Team contacts have been exported to Excel format.",
+    });
+  };
+
+  const handleExportJSON = () => {
+    const exportData = {
+      exportDate: new Date().toISOString(),
+      totalContacts: sampleTeamData.length,
+      contacts: sampleTeamData,
+      metadata: {
+        version: '1.0',
+        format: 'json',
+        source: 'Team Management System'
+      }
+    };
+
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `team-contacts-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    toast.success("Team Exported", {
+      description: "Team contacts have been exported to JSON format.",
+    });
+  };
+
+  const handleExportVCard = () => {
+    let vCardData = '';
+    sampleTeamData.forEach(contact => {
+      vCardData += `BEGIN:VCARD\nVERSION:3.0\nFN:${contact.firstName} ${contact.lastName}\nN:${contact.lastName};${contact.firstName};;;\nEMAIL:${contact.email}\nTEL:${contact.phone}\nORG:${contact.company}\nTITLE:${contact.position}\nADR:;;;;;;${contact.location};\nEND:VCARD\n\n`;
+    });
+
+    const blob = new Blob([vCardData], { type: 'text/vcard' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `team-contacts-${new Date().toISOString().split('T')[0]}.vcf`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    toast.success("Team Exported", {
+      description: "Team contacts have been exported as vCard format.",
+    });
+  };
+
+  // Add Contact functionality
+  const handleAddTag = () => {
+    if (currentTagInput.trim() && !newContact.tags.includes(currentTagInput.trim())) {
+      setNewContact(prev => ({
+        ...prev,
+        tags: [...prev.tags, currentTagInput.trim()]
+      }));
+      setCurrentTagInput('');
+    }
+  };
+
+  const handleRemoveTag = (tagToRemove: string) => {
+    setNewContact(prev => ({
+      ...prev,
+      tags: prev.tags.filter(tag => tag !== tagToRemove)
+    }));
+  };
+
+  const handleAddContact = () => {
+    // Validation
+    if (!newContact.firstName.trim() || !newContact.lastName.trim()) {
+      toast.error("Validation Error", {
+        description: "First name and last name are required.",
+      });
+      return;
+    }
+
+    if (!newContact.email.trim()) {
+      toast.error("Validation Error", {
+        description: "Email address is required.",
+      });
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(newContact.email)) {
+      toast.error("Validation Error", {
+        description: "Please enter a valid email address.",
+      });
+      return;
+    }
+
+    console.log('Adding new contact:', newContact);
+    
+    toast.success("Contact Added", {
+      description: `${newContact.firstName} ${newContact.lastName} has been added to your team.`,
+    });
+    
+    // Reset form
+    setNewContact({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      company: '',
+      position: '',
+      location: '',
+      notes: '',
+      tags: [],
+      priority: 'medium'
+    });
+    setIsAddContactOpen(false);
+  };
+
+  // Settings functionality
+  const handleSaveSettings = () => {
+    console.log('Saving team settings:', teamSettings);
+    
+    toast.success("Settings Saved", {
+      description: "Your team management preferences have been updated.",
+    });
+    setIsSettingsOpen(false);
+  };
+
+  const handleImportContacts = () => {
+    // This would typically open a file picker
+    toast.success("Import Started", {
+      description: "Contact import functionality would be implemented here.",
+    });
+  };
+
+  const handleBulkActions = () => {
+    toast.success("Bulk Actions", {
+      description: "Bulk action functionality would be available here.",
+    });
+  };
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'high': return 'bg-red-100 text-red-800 border-red-200';
+      case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'low': return 'bg-green-100 text-green-800 border-green-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
   return (
     <div className="w-full h-full">
       <header className="flex flex-wrap gap-3 min-h-20 py-4 px-4 md:px-6 lg:px-8 shrink-0 items-center transition-all ease-linear border-b">
@@ -49,28 +334,448 @@ export default function Page() {
             </Breadcrumb>
           </div>
         </div>
+        
         {/* Right side */}
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
-            <Search className="w-4 h-4 mr-2" />
-            Search
-          </Button>
-          <Button variant="outline" size="sm">
-            <Filter className="w-4 h-4 mr-2" />
-            Filter
-          </Button>
-          <Button variant="outline" size="sm">
-            <Download className="w-4 h-4 mr-2" />
-            Export
-          </Button>
-          <Button variant="outline" size="sm">
-            <Settings className="w-4 h-4 mr-2" />
-            Settings
-          </Button>
-          <Button size="sm">
-            <Plus className="w-4 h-4 mr-2" />
-            Add Contact
-          </Button>
+          {/* Export Button */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                <Download className="w-4 h-4 mr-2" />
+                Export
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem onClick={handleExportCSV} className="gap-2">
+                <FileSpreadsheet className="w-4 h-4" />
+                Export as CSV
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExportExcel} className="gap-2">
+                <FileText className="w-4 h-4" />
+                Export as Excel
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExportJSON} className="gap-2">
+                <Database className="w-4 h-4" />
+                Export as JSON
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleExportVCard} className="gap-2">
+                <Users className="w-4 h-4" />
+                Export as vCard
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Settings Button */}
+          <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="sm">
+                <Settings className="w-4 h-4 mr-2" />
+                Settings
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Team Management Settings</DialogTitle>
+                <DialogDescription>
+                  Configure your team management preferences and data handling options.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-6 py-4">
+                {/* Sync & Data */}
+                <div className="space-y-3">
+                  <h4 className="font-medium flex items-center gap-2">
+                    <Database className="w-4 h-4" />
+                    Data & Synchronization
+                  </h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="auto-sync">Auto Sync</Label>
+                      <Switch
+                        id="auto-sync"
+                        checked={teamSettings.autoSync}
+                        onCheckedChange={(checked) => setTeamSettings(prev => ({ ...prev, autoSync: checked }))}
+                      />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="data-backup">Data Backup</Label>
+                      <Switch
+                        id="data-backup"
+                        checked={teamSettings.dataBackup}
+                        onCheckedChange={(checked) => setTeamSettings(prev => ({ ...prev, dataBackup: checked }))}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="export-format">Default Export Format</Label>
+                    <Select
+                      value={teamSettings.exportFormat}
+                      onValueChange={(value: 'csv' | 'xlsx' | 'json') => setTeamSettings(prev => ({ ...prev, exportFormat: value }))}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="csv">CSV</SelectItem>
+                        <SelectItem value="xlsx">Excel</SelectItem>
+                        <SelectItem value="json">JSON</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Notifications */}
+                <div className="space-y-3">
+                  <h4 className="font-medium flex items-center gap-2">
+                    <Bell className="w-4 h-4" />
+                    Notifications
+                  </h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="notifications">Push Notifications</Label>
+                      <Switch
+                        id="notifications"
+                        checked={teamSettings.notifications}
+                        onCheckedChange={(checked) => setTeamSettings(prev => ({ ...prev, notifications: checked }))}
+                      />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="email-updates">Email Updates</Label>
+                      <Switch
+                        id="email-updates"
+                        checked={teamSettings.emailUpdates}
+                        onCheckedChange={(checked) => setTeamSettings(prev => ({ ...prev, emailUpdates: checked }))}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Privacy & Sharing */}
+                <div className="space-y-3">
+                  <h4 className="font-medium flex items-center gap-2">
+                    <Shield className="w-4 h-4" />
+                    Privacy & Sharing
+                  </h4>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="share-contacts">Allow Contact Sharing</Label>
+                    <Switch
+                      id="share-contacts"
+                      checked={teamSettings.shareContacts}
+                      onCheckedChange={(checked) => setTeamSettings(prev => ({ ...prev, shareContacts: checked }))}
+                    />
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Display & Interface */}
+                <div className="space-y-3">
+                  <h4 className="font-medium flex items-center gap-2">
+                    <Palette className="w-4 h-4" />
+                    Display & Interface
+                  </h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="theme">Theme</Label>
+                      <Select
+                        value={teamSettings.theme}
+                        onValueChange={(value: 'light' | 'dark' | 'auto') => setTeamSettings(prev => ({ ...prev, theme: value }))}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="light">Light</SelectItem>
+                          <SelectItem value="dark">Dark</SelectItem>
+                          <SelectItem value="auto">Auto</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="default-view">Default View</Label>
+                      <Select
+                        value={teamSettings.defaultView}
+                        onValueChange={(value: 'table' | 'grid' | 'list') => setTeamSettings(prev => ({ ...prev, defaultView: value }))}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="table">Table</SelectItem>
+                          <SelectItem value="grid">Grid</SelectItem>
+                          <SelectItem value="list">List</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="items-per-page">Items Per Page</Label>
+                    <Select
+                      value={teamSettings.itemsPerPage.toString()}
+                      onValueChange={(value) => setTeamSettings(prev => ({ ...prev, itemsPerPage: parseInt(value) }))}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="10">10</SelectItem>
+                        <SelectItem value="25">25</SelectItem>
+                        <SelectItem value="50">50</SelectItem>
+                        <SelectItem value="100">100</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Actions */}
+                <div className="space-y-3">
+                  <h4 className="font-medium">Data Management</h4>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button variant="outline" onClick={handleImportContacts}>
+                      <Upload className="w-4 h-4 mr-2" />
+                      Import Contacts
+                    </Button>
+                    <Button variant="outline" onClick={handleBulkActions}>
+                      <Edit className="w-4 h-4 mr-2" />
+                      Bulk Actions
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setIsSettingsOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleSaveSettings}>
+                  Save Settings
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          {/* Add Contact Button */}
+          <Dialog open={isAddContactOpen} onOpenChange={setIsAddContactOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm">
+                <Plus className="w-4 h-4 mr-2" />
+                Add Contact
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Add New Contact</DialogTitle>
+                <DialogDescription>
+                  Create a new team contact with their details and information.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                {/* Basic Information */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="firstName">First Name *</Label>
+                    <Input
+                      id="firstName"
+                      value={newContact.firstName}
+                      onChange={(e) => setNewContact(prev => ({ ...prev, firstName: e.target.value }))}
+                      placeholder="Enter first name"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="lastName">Last Name *</Label>
+                    <Input
+                      id="lastName"
+                      value={newContact.lastName}
+                      onChange={(e) => setNewContact(prev => ({ ...prev, lastName: e.target.value }))}
+                      placeholder="Enter last name"
+                    />
+                  </div>
+                </div>
+
+                {/* Contact Information */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="email">Email Address *</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={newContact.email}
+                      onChange={(e) => setNewContact(prev => ({ ...prev, email: e.target.value }))}
+                      placeholder="Enter email address"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="phone">Phone Number</Label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      value={newContact.phone}
+                      onChange={(e) => setNewContact(prev => ({ ...prev, phone: e.target.value }))}
+                      placeholder="Enter phone number"
+                    />
+                  </div>
+                </div>
+
+                {/* Professional Information */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="company">Company</Label>
+                    <Input
+                      id="company"
+                      value={newContact.company}
+                      onChange={(e) => setNewContact(prev => ({ ...prev, company: e.target.value }))}
+                      placeholder="Enter company name"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="position">Position</Label>
+                    <Input
+                      id="position"
+                      value={newContact.position}
+                      onChange={(e) => setNewContact(prev => ({ ...prev, position: e.target.value }))}
+                      placeholder="Enter job position"
+                    />
+                  </div>
+                </div>
+
+                {/* Location & Priority */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="location">Location</Label>
+                    <Input
+                      id="location"
+                      value={newContact.location}
+                      onChange={(e) => setNewContact(prev => ({ ...prev, location: e.target.value }))}
+                      placeholder="Enter location"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="priority">Priority</Label>
+                    <Select
+                      value={newContact.priority}
+                      onValueChange={(value: 'low' | 'medium' | 'high') => setNewContact(prev => ({ ...prev, priority: value }))}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="low">Low</SelectItem>
+                        <SelectItem value="medium">Medium</SelectItem>
+                        <SelectItem value="high">High</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                {/* Tags */}
+                <div>
+                  <Label htmlFor="tags">Tags</Label>
+                  <div className="flex gap-2 mb-2">
+                    <Input
+                      id="tags"
+                      value={currentTagInput}
+                      onChange={(e) => setCurrentTagInput(e.target.value)}
+                      placeholder="Enter a tag"
+                      onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTag())}
+                    />
+                    <Button type="button" onClick={handleAddTag} variant="outline">
+                      Add
+                    </Button>
+                  </div>
+                  {newContact.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {newContact.tags.map((tag, index) => (
+                        <Badge key={index} variant="secondary" className="flex items-center gap-1">
+                          {tag}
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveTag(tag)}
+                            className="ml-1 text-xs hover:text-red-500"
+                          >
+                            ×
+                          </button>
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Notes */}
+                <div>
+                  <Label htmlFor="notes">Notes</Label>
+                  <Textarea
+                    id="notes"
+                    value={newContact.notes}
+                    onChange={(e) => setNewContact(prev => ({ ...prev, notes: e.target.value }))}
+                    placeholder="Enter any additional notes..."
+                    rows={3}
+                  />
+                </div>
+
+                {/* Contact Preview */}
+                {(newContact.firstName || newContact.lastName || newContact.email) && (
+                  <div className="border rounded-lg p-4 bg-gray-50">
+                    <Label className="text-sm font-medium text-gray-700 mb-2 block">Preview</Label>
+                    <div className="flex items-start gap-3">
+                      <Avatar className="w-12 h-12">
+                        <AvatarFallback>
+                          {(newContact.firstName?.[0] || '') + (newContact.lastName?.[0] || '')}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <div className="font-medium">
+                          {newContact.firstName} {newContact.lastName}
+                        </div>
+                        {newContact.email && (
+                          <div className="text-sm text-gray-600 flex items-center gap-1">
+                            <Mail className="w-3 h-3" />
+                            {newContact.email}
+                          </div>
+                        )}
+                        {newContact.phone && (
+                          <div className="text-sm text-gray-600 flex items-center gap-1">
+                            <Phone className="w-3 h-3" />
+                            {newContact.phone}
+                          </div>
+                        )}
+                        {newContact.company && (
+                          <div className="text-sm text-gray-600 flex items-center gap-1">
+                            <Building className="w-3 h-3" />
+                            {newContact.company}
+                            {newContact.position && ` - ${newContact.position}`}
+                          </div>
+                        )}
+                        {newContact.location && (
+                          <div className="text-sm text-gray-600 flex items-center gap-1">
+                            <MapPin className="w-3 h-3" />
+                            {newContact.location}
+                          </div>
+                        )}
+                        <div className="mt-1">
+                          <Badge className={getPriorityColor(newContact.priority)}>
+                            {newContact.priority} priority
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setIsAddContactOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleAddContact}>
+                  Add Contact
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </header>
       
@@ -171,4 +876,4 @@ export default function Page() {
       </div>
     </div>
   );
-}
+}// app/dashboard/team/page.tsx
