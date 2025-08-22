@@ -302,8 +302,9 @@ export default function Page() {
 
   return (
     <SettingsPanelProvider>
-      <div className="w-full h-screen bg-black flex flex-col">
-        <header className="flex flex-wrap gap-3 min-h-20 py-4 px-4 md:px-6 lg:px-8 shrink-0 items-center transition-all ease-linear border-b border-gray-800 bg-black">
+      <div className="w-full h-screen flex flex-col">
+        {/* Header - matches team page structure exactly */}
+        <header className="flex flex-wrap gap-3 min-h-20 py-4 px-4 md:px-6 lg:px-8 shrink-0 items-center transition-all ease-linear border-b">
           {/* Left side */}
           <div className="flex flex-1 items-center gap-2">
             <SidebarTrigger className="-ms-1" />
@@ -315,7 +316,7 @@ export default function Page() {
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink href="/">Dashboard</BreadcrumbLink>
+                    <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator className="hidden md:block" />
                   <BreadcrumbItem>
@@ -354,12 +355,12 @@ export default function Page() {
                   {searchResults.length > 0 && (
                     <div className="max-h-60 overflow-y-auto space-y-2">
                       {searchResults.map((result, index) => (
-                        <div key={index} className="p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                        <div key={index} className="p-3 border rounded-lg hover:bg-accent/50 cursor-pointer">
                           {result.type === 'message' && (
                             <div>
                               <div className="font-medium text-sm">{result.sender}</div>
-                              <div className="text-sm text-gray-600">{result.content}</div>
-                              <div className="text-xs text-gray-400">{result.timestamp}</div>
+                              <div className="text-sm text-muted-foreground">{result.content}</div>
+                              <div className="text-xs text-muted-foreground">{result.timestamp}</div>
                             </div>
                           )}
                           {result.type === 'contact' && (
@@ -369,14 +370,14 @@ export default function Page() {
                               </Avatar>
                               <div>
                                 <div className="font-medium text-sm">{result.name}</div>
-                                <div className="text-xs text-gray-400">{result.email}</div>
+                                <div className="text-xs text-muted-foreground">{result.email}</div>
                               </div>
                             </div>
                           )}
                           {result.type === 'file' && (
                             <div>
                               <div className="font-medium text-sm">{result.name}</div>
-                              <div className="text-xs text-gray-400">{result.size} • {result.timestamp}</div>
+                              <div className="text-xs text-muted-foreground">{result.size} • {result.timestamp}</div>
                             </div>
                           )}
                         </div>
@@ -385,7 +386,7 @@ export default function Page() {
                   )}
                   
                   {searchQuery && searchResults.length === 0 && (
-                    <div className="text-center text-gray-500 py-4">
+                    <div className="text-center text-muted-foreground py-4">
                       No results found for "{searchQuery}"
                     </div>
                   )}
@@ -412,7 +413,7 @@ export default function Page() {
                   {contacts.map((contact) => (
                     <div
                       key={contact.id}
-                      className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
+                      className="flex items-center justify-between p-3 border rounded-lg hover:bg-accent/50 cursor-pointer"
                       onClick={() => handleVoiceCall(contact.id)}
                     >
                       <div className="flex items-center gap-3">
@@ -421,16 +422,16 @@ export default function Page() {
                             <AvatarImage src={contact.avatar} />
                             <AvatarFallback>{contact.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                           </Avatar>
-                          <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${getStatusColor(contact.status)}`}></div>
+                          <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-background ${getStatusColor(contact.status)}`}></div>
                         </div>
                         <div>
                           <div className="font-medium">{contact.name}</div>
-                          <div className="text-sm text-gray-500">
+                          <div className="text-sm text-muted-foreground">
                             {contact.status === 'online' ? 'Online' : contact.lastSeen || 'Offline'}
                           </div>
                         </div>
                       </div>
-                      <PhoneCall className="w-4 h-4 text-gray-400" />
+                      <PhoneCall className="w-4 h-4 text-muted-foreground" />
                     </div>
                   ))}
                 </div>
@@ -456,7 +457,7 @@ export default function Page() {
                   {contacts.map((contact) => (
                     <div
                       key={contact.id}
-                      className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
+                      className="flex items-center justify-between p-3 border rounded-lg hover:bg-accent/50 cursor-pointer"
                       onClick={() => handleVideoCall(contact.id)}
                     >
                       <div className="flex items-center gap-3">
@@ -465,16 +466,16 @@ export default function Page() {
                             <AvatarImage src={contact.avatar} />
                             <AvatarFallback>{contact.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                           </Avatar>
-                          <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${getStatusColor(contact.status)}`}></div>
+                          <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-background ${getStatusColor(contact.status)}`}></div>
                         </div>
                         <div>
                           <div className="font-medium">{contact.name}</div>
-                          <div className="text-sm text-gray-500">
+                          <div className="text-sm text-muted-foreground">
                             {contact.status === 'online' ? 'Online' : contact.lastSeen || 'Offline'}
                           </div>
                         </div>
                       </div>
-                      <VideoIcon className="w-4 h-4 text-gray-400" />
+                      <VideoIcon className="w-4 h-4 text-muted-foreground" />
                     </div>
                   ))}
                 </div>
@@ -557,7 +558,7 @@ export default function Page() {
                             </Avatar>
                             <div>
                               <div className="font-medium text-sm">{contact.name}</div>
-                              <div className="text-xs text-gray-500">{contact.email}</div>
+                              <div className="text-xs text-muted-foreground">{contact.email}</div>
                             </div>
                           </div>
                           <Button
@@ -763,8 +764,8 @@ export default function Page() {
                       key={contact.id}
                       className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-colors ${
                         selectedContact === contact.id 
-                          ? 'border-blue-500 bg-blue-50' 
-                          : 'hover:bg-gray-50'
+                          ? 'border-primary bg-accent' 
+                          : 'hover:bg-accent/50'
                       }`}
                       onClick={() => setSelectedContact(contact.id)}
                     >
@@ -773,17 +774,17 @@ export default function Page() {
                           <AvatarImage src={contact.avatar} />
                           <AvatarFallback>{contact.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                         </Avatar>
-                        <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${getStatusColor(contact.status)}`}></div>
+                        <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-background ${getStatusColor(contact.status)}`}></div>
                       </div>
                       <div className="flex-1">
                         <div className="font-medium">{contact.name}</div>
-                        <div className="text-sm text-gray-500">{contact.email}</div>
-                        <div className="text-xs text-gray-400">
+                        <div className="text-sm text-muted-foreground">{contact.email}</div>
+                        <div className="text-xs text-muted-foreground">
                           {contact.status === 'online' ? 'Online' : contact.lastSeen || 'Offline'}
                         </div>
                       </div>
                       {selectedContact === contact.id && (
-                        <Check className="w-5 h-5 text-blue-500" />
+                        <Check className="w-5 h-5 text-primary" />
                       )}
                     </div>
                   ))}
@@ -801,7 +802,7 @@ export default function Page() {
           </div>
         </header>
         
-        <div className="flex-1 w-full bg-[#111111] overflow-hidden">
+        <div className="flex-1 w-full overflow-hidden">
           <Chat />
         </div>
       </div>

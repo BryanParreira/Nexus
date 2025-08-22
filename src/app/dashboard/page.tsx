@@ -26,6 +26,7 @@ import { ActionButtons } from "@/components/action-buttons";
 export default function Page() {
   return (
     <div className="w-full h-full">
+      {/* Header - matches calendar page structure exactly */}
       <header className="flex flex-wrap gap-3 min-h-20 py-4 px-4 md:px-6 lg:px-8 shrink-0 items-center transition-all ease-linear border-b">
         {/* Left side */}
         <div className="flex flex-1 items-center gap-2">
@@ -51,13 +52,13 @@ export default function Page() {
         {/* Right side */}
         <ActionButtons />
       </header>
-      
+
       <div className="p-4 md:p-6 lg:p-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">Dashboard Overview</h1>
           <p className="text-gray-400">Monitor your key metrics and performance indicators</p>
         </div>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Chart01 />
           <Chart02 />

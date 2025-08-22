@@ -25,8 +25,9 @@ import {
 const CalendarPage: React.FC = () => {
   return (
     <CalendarProvider>
-      <div className="w-full h-full bg-black">
-        <header className="flex flex-wrap gap-3 min-h-20 py-4 px-4 md:px-6 lg:px-8 shrink-0 items-center transition-all ease-linear border-b border-gray-800 bg-black">
+      <div className="w-full h-full">
+        {/* Header - matches team page structure exactly */}
+        <header className="flex flex-wrap gap-3 min-h-20 py-4 px-4 md:px-6 lg:px-8 shrink-0 items-center transition-all ease-linear border-b">
           {/* Left side */}
           <div className="flex flex-1 items-center gap-2">
             <SidebarTrigger className="-ms-1" />
@@ -38,7 +39,7 @@ const CalendarPage: React.FC = () => {
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink href="/">Dashboard</BreadcrumbLink>
+                    <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator className="hidden md:block" />
                   <BreadcrumbItem>
@@ -65,7 +66,7 @@ const CalendarPage: React.FC = () => {
           </div>
         </header>
         
-        <div className="h-[calc(100vh-5rem)] w-full bg-[#111111]">
+        <div className="h-[calc(100vh-5rem)] w-full">
           <BigCalendar />
         </div>
       </div>
