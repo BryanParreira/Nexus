@@ -148,7 +148,6 @@ export default function Page() {
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     if (query.trim()) {
-      // Simulate search results
       const results = [
         { type: 'message', content: 'Meeting tomorrow at 3 PM', sender: 'John Doe', timestamp: '2 hours ago' },
         { type: 'message', content: 'Project update ready for review', sender: 'Jane Smith', timestamp: '1 day ago' },
@@ -233,7 +232,6 @@ export default function Page() {
       description: `Group "${groupSettings.name}" has been created with ${groupSettings.members.length} members.`,
     });
     
-    // Reset form
     setGroupSettings({
       name: '',
       description: '',
@@ -269,7 +267,6 @@ export default function Page() {
   };
 
   const handleExportChats = () => {
-    // Simulate chat export
     const chatData = JSON.stringify({
       chats: [
         { id: 1, contact: "John Doe", messages: ["Hello", "How are you?"], timestamp: new Date() },
@@ -303,7 +300,7 @@ export default function Page() {
   return (
     <SettingsPanelProvider>
       <div className="w-full h-screen flex flex-col">
-        {/* Header - matches team page structure exactly */}
+        {/* Header - matches dashboard page structure exactly */}
         <header className="flex flex-wrap gap-3 min-h-20 py-4 px-4 md:px-6 lg:px-8 shrink-0 items-center transition-all ease-linear border-b">
           {/* Left side */}
           <div className="flex flex-1 items-center gap-2">

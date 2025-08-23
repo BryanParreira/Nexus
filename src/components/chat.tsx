@@ -34,53 +34,17 @@ export default function Chat() {
     <ScrollArea className="h-full [&>div>div]:h-full w-full shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl bg-background">
       <div className="h-full flex flex-col px-4 md:px-6 lg:px-8">
         {/* Header */}
-        <div className="py-5 bg-background sticky top-0 z-10 before:absolute before:inset-x-0 before:bottom-0 before:h-px before:bg-gradient-to-r before:from-black/[0.06] before:via-black/10 before:to-black/[0.06]">
+        <div className="py-5 bg-background sticky top-0 z-10 before:absolute before:inset-x-0 before:bottom-0 before:h-px before:bg-gradient-to-r before:from-border/50 before:via-border before:to-border/50">
           <div className="flex items-center justify-between gap-2">
-            <Breadcrumb>
-              <BreadcrumbList className="sm:gap-1.5">
-                <BreadcrumbItem>
-                  <BreadcrumbLink href="#">Playground</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Chat</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-            <div className="flex items-center gap-1 -my-2 -me-2">
-              <Button variant="ghost" className="px-2">
-                <RiCodeSSlashLine
-                  className="text-muted-foreground sm:text-muted-foreground/70 size-5"
-                  size={20}
-                  aria-hidden="true"
-                />
-                <span className="max-sm:sr-only">Code</span>
-              </Button>
-              <Button variant="ghost" className="px-2">
-                <RiShareLine
-                  className="text-muted-foreground sm:text-muted-foreground/70 size-5"
-                  size={20}
-                  aria-hidden="true"
-                />
-                <span className="max-sm:sr-only">Share</span>
-              </Button>
-              <Button variant="ghost" className="px-2">
-                <RiShareCircleLine
-                  className="text-muted-foreground sm:text-muted-foreground/70 size-5"
-                  size={20}
-                  aria-hidden="true"
-                />
-                <span className="max-sm:sr-only">Export</span>
-              </Button>
-              <SettingsPanelTrigger />
-            </div>
+            
+          
           </div>
         </div>
         {/* Chat */}
         <div className="relative grow">
           <div className="max-w-3xl mx-auto mt-6 space-y-6">
             <div className="text-center my-8">
-              <div className="inline-flex items-center bg-white rounded-full border border-black/[0.08] shadow-xs text-xs font-medium py-1 px-3 text-foreground/80">
+              <div className="inline-flex items-center bg-background rounded-full border shadow-xs text-xs font-medium py-1 px-3 text-muted-foreground">
                 <RiShining2Line
                   className="me-1.5 text-muted-foreground/70 -ms-1"
                   size={14}
@@ -111,7 +75,7 @@ export default function Chat() {
         {/* Footer */}
         <div className="sticky bottom-0 pt-4 md:pt-8 z-50">
           <div className="max-w-3xl mx-auto bg-background rounded-[20px] pb-4 md:pb-8">
-            <div className="relative rounded-[20px] border border-transparent bg-muted transition-colors focus-within:bg-muted/50 focus-within:border-input has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50 [&:has(input:is(:disabled))_*]:pointer-events-none">
+            <div className="relative rounded-[20px] border-2 border-foreground bg-muted transition-colors focus-within:bg-muted/50 focus-within:border-input has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50 [&:has(input:is(:disabled))_*]:pointer-events-none">
               <textarea
                 className="flex sm:min-h-[84px] w-full bg-transparent px-4 py-3 text-[15px] leading-relaxed text-foreground placeholder:text-muted-foreground/70 focus-visible:outline-none [resize:none]"
                 placeholder="Ask me anything..."
