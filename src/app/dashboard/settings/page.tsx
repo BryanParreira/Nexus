@@ -1,7 +1,7 @@
 // app/dashboard/settings/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useId, useRef, useEffect } from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,6 +16,20 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { 
   Save,
   X,
@@ -42,7 +56,12 @@ import {
   Eye,
   EyeOff,
   Calendar,
-  AlertTriangle
+  AlertTriangle,
+  CircleAlertIcon,
+  StoreIcon,
+  RefreshCcwIcon,
+  ImagePlusIcon,
+  CheckIcon
 } from "lucide-react";
 
 const settingsCategories = [
@@ -94,6 +113,504 @@ const Toggle = ({ checked, onToggle, disabled = false }) => (
   </button>
 );
 
+// Delete Account Confirmation Dialog
+const DeleteAccountDialog = () => {
+  const id = useId();
+  const [inputValue, setInputValue] = useState("");
+  const ACCOUNT_NAME = "Jonathon Smith";
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="destructive" size="sm">
+          Delete
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <div className="flex flex-col items-center gap-2">
+          <div
+            className="flex size-9 shrink-0 items-center justify-center rounded-full border"
+            aria-hidden="true"
+          >
+            <CircleAlertIcon className="opacity-80" size={16} />
+          </div>
+          <DialogHeader>
+            <DialogTitle className="sm:text-center">
+              Final confirmation
+            </DialogTitle>
+            <DialogDescription className="sm:text-center">
+              This action cannot be undone. To confirm, please enter your full name{" "}
+              <span className="text-foreground">Jonathon Smith</span>.
+            </DialogDescription>
+          </DialogHeader>
+        </div>
+
+        <form className="space-y-5">
+          <div className="*:not-first:mt-2">
+            <Label htmlFor={id}>Full name</Label>
+            <Input
+              id={id}
+              type="text"
+              placeholder="Type Jonathon Smith to confirm"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+            />
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button type="button" variant="outline" className="flex-1">
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button
+              type="button"
+              variant="destructive"
+              className="flex-1"
+              disabled={inputValue !== ACCOUNT_NAME}
+            >
+              Delete Account
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+// Edit Profile Dialog
+const EditProfileDialog = () => {
+  const id = useId();
+  const [bio, setBio] = useState("Experienced project manager with a passion for driving innovation and delivering results.");
+  const maxLength = 180;
+  const characterCount = bio.length;
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button 
+          size="sm" 
+          className="absolute -bottom-1 -right-1 w-8 h-8 p-0 rounded-full bg-blue-500 hover:bg-blue-600 opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          <Camera className="w-4 h-4" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="flex flex-col gap-0 overflow-y-visible p-0 sm:max-w-lg [&>button:last-child]:top-3.5">
+        <DialogHeader className="contents space-y-0 text-left">
+          <DialogTitle className="border-b px-6 py-4 text-base">
+            Edit profile
+          </DialogTitle>
+        </DialogHeader>
+        <DialogDescription className="sr-only">
+          Make changes to your profile here. You can change your photo and set information.
+        </DialogDescription>
+        <div className="overflow-y-auto">
+          {/* Profile Background */}
+          <div className="h-32">
+            <div className="bg-muted relative flex size-full items-center justify-center overflow-hidden">
+              <div className="absolute inset-0 flex items-center justify-center gap-2">
+                <button
+                  type="button"
+                  className="focus-visible:border-ring focus-visible:ring-ring/50 z-50 flex size-10 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white transition-[color,box-shadow] outline-none hover:bg-black/80 focus-visible:ring-[3px]"
+                  aria-label="Upload background image"
+                >
+                  <ImagePlusIcon size={16} aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          {/* Avatar */}
+          <div className="-mt-10 px-6">
+            <div className="border-background bg-muted relative flex size-20 items-center justify-center overflow-hidden rounded-full border-4 shadow-xs shadow-black/10">
+              <button
+                type="button"
+                className="focus-visible:border-ring focus-visible:ring-ring/50 absolute flex size-8 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white transition-[color,box-shadow] outline-none hover:bg-black/80 focus-visible:ring-[3px]"
+                aria-label="Change profile picture"
+              >
+                <ImagePlusIcon size={16} aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+
+          <div className="px-6 pt-4 pb-6">
+            <form className="space-y-4">
+              <div className="flex flex-col gap-4 sm:flex-row">
+                <div className="flex-1 space-y-2">
+                  <Label htmlFor={`${id}-first-name`}>First name</Label>
+                  <Input
+                    id={`${id}-first-name`}
+                    placeholder="Jonathon"
+                    defaultValue="Jonathon"
+                    type="text"
+                    required
+                  />
+                </div>
+                <div className="flex-1 space-y-2">
+                  <Label htmlFor={`${id}-last-name`}>Last name</Label>
+                  <Input
+                    id={`${id}-last-name`}
+                    placeholder="Smith"
+                    defaultValue="Smith"
+                    type="text"
+                    required
+                  />
+                </div>
+              </div>
+              <div className="*:not-first:mt-2">
+                <Label htmlFor={`${id}-username`}>Username</Label>
+                <div className="relative">
+                  <Input
+                    id={`${id}-username`}
+                    className="peer pe-9"
+                    placeholder="Username"
+                    defaultValue="jonathon-smith"
+                    type="text"
+                    required
+                  />
+                  <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 end-0 flex items-center justify-center pe-3 peer-disabled:opacity-50">
+                    <CheckIcon
+                      size={16}
+                      className="text-emerald-500"
+                      aria-hidden="true"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="*:not-first:mt-2">
+                <Label htmlFor={`${id}-website`}>Website</Label>
+                <div className="flex rounded-md shadow-xs">
+                  <span className="border-input bg-background text-muted-foreground -z-10 inline-flex items-center rounded-s-md border px-3 text-sm">
+                    https://
+                  </span>
+                  <Input
+                    id={`${id}-website`}
+                    className="-ms-px rounded-s-none shadow-none"
+                    placeholder="yourwebsite.com"
+                    defaultValue="jonathon-smith.com"
+                    type="text"
+                  />
+                </div>
+              </div>
+              <div className="*:not-first:mt-2">
+                <Label htmlFor={`${id}-bio`}>Biography</Label>
+                <Textarea
+                  id={`${id}-bio`}
+                  placeholder="Write a few sentences about yourself"
+                  value={bio}
+                  maxLength={maxLength}
+                  onChange={(e) => setBio(e.target.value)}
+                  aria-describedby={`${id}-description`}
+                />
+                <p
+                  id={`${id}-description`}
+                  className="text-muted-foreground mt-2 text-right text-xs"
+                  role="status"
+                  aria-live="polite"
+                >
+                  <span className="tabular-nums">{maxLength - characterCount}</span>{" "}
+                  characters left
+                </p>
+              </div>
+            </form>
+          </div>
+        </div>
+        <DialogFooter className="border-t px-6 py-4">
+          <DialogClose asChild>
+            <Button type="button" variant="outline">
+              Cancel
+            </Button>
+          </DialogClose>
+          <DialogClose asChild>
+            <Button type="button">Save changes</Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+// Change Plan Dialog
+const ChangePlanDialog = () => {
+  const id = useId();
+  
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline">Change Plan</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <div className="mb-2 flex flex-col gap-2">
+          <div
+            className="flex size-11 shrink-0 items-center justify-center rounded-full border"
+            aria-hidden="true"
+          >
+            <RefreshCcwIcon className="opacity-80" size={16} />
+          </div>
+          <DialogHeader>
+            <DialogTitle className="text-left">Change your plan</DialogTitle>
+            <DialogDescription className="text-left">
+              Pick one of the following plans.
+            </DialogDescription>
+          </DialogHeader>
+        </div>
+
+        <form className="space-y-5">
+          <RadioGroup className="gap-2" defaultValue="2">
+            {/* Essential Plan */}
+            <div className="border-input has-data-[state=checked]:border-primary/50 has-data-[state=checked]:bg-accent relative flex w-full items-center gap-2 rounded-md border px-4 py-3 shadow-xs outline-none">
+              <RadioGroupItem
+                value="1"
+                id={`${id}-1`}
+                aria-describedby={`${id}-1-description`}
+                className="order-1 after:absolute after:inset-0"
+              />
+              <div className="grid grow gap-1">
+                <Label htmlFor={`${id}-1`}>Essential</Label>
+                <p
+                  id={`${id}-1-description`}
+                  className="text-muted-foreground text-xs"
+                >
+                  $9 per month
+                </p>
+              </div>
+            </div>
+            {/* Pro Plan - Current */}
+            <div className="border-input has-data-[state=checked]:border-primary/50 has-data-[state=checked]:bg-accent relative flex w-full items-center gap-2 rounded-md border px-4 py-3 shadow-xs outline-none">
+              <RadioGroupItem
+                value="2"
+                id={`${id}-2`}
+                aria-describedby={`${id}-2-description`}
+                className="order-1 after:absolute after:inset-0"
+              />
+              <div className="grid grow gap-1">
+                <div className="flex items-center gap-2">
+                  <Label htmlFor={`${id}-2`}>Pro</Label>
+                  <Badge variant="secondary" className="text-xs">Current</Badge>
+                </div>
+                <p
+                  id={`${id}-2-description`}
+                  className="text-muted-foreground text-xs"
+                >
+                  $29 per month
+                </p>
+              </div>
+            </div>
+            {/* Enterprise Plan */}
+            <div className="border-input has-data-[state=checked]:border-primary/50 has-data-[state=checked]:bg-accent relative flex w-full items-center gap-2 rounded-md border px-4 py-3 shadow-xs outline-none">
+              <RadioGroupItem
+                value="3"
+                id={`${id}-3`}
+                aria-describedby={`${id}-3-description`}
+                className="order-1 after:absolute after:inset-0"
+              />
+              <div className="grid grow gap-1">
+                <Label htmlFor={`${id}-3`}>Enterprise</Label>
+                <p
+                  id={`${id}-3-description`}
+                  className="text-muted-foreground text-xs"
+                >
+                  $99 per month
+                </p>
+              </div>
+            </div>
+          </RadioGroup>
+
+          <div className="space-y-3">
+            <p>
+              <strong className="text-sm font-medium">Features include:</strong>
+            </p>
+            <ul className="text-muted-foreground space-y-2 text-sm">
+              <li className="flex gap-2">
+                <CheckIcon
+                  size={16}
+                  className="text-primary mt-0.5 shrink-0"
+                  aria-hidden="true"
+                />
+                Create unlimited projects.
+              </li>
+              <li className="flex gap-2">
+                <CheckIcon
+                  size={16}
+                  className="text-primary mt-0.5 shrink-0"
+                  aria-hidden="true"
+                />
+                Advanced analytics and reporting.
+              </li>
+              <li className="flex gap-2">
+                <CheckIcon
+                  size={16}
+                  className="text-primary mt-0.5 shrink-0"
+                  aria-hidden="true"
+                />
+                Priority customer support.
+              </li>
+              <li className="flex gap-2">
+                <CheckIcon
+                  size={16}
+                  className="text-primary mt-0.5 shrink-0"
+                  aria-hidden="true"
+                />
+                Advanced team collaboration tools.
+              </li>
+              <li className="flex gap-2">
+                <CheckIcon
+                  size={16}
+                  className="text-primary mt-0.5 shrink-0"
+                  aria-hidden="true"
+                />
+                Custom integrations and API access.
+              </li>
+            </ul>
+          </div>
+
+          <div className="grid gap-2">
+            <DialogClose asChild>
+              <Button type="button" className="w-full">
+                Change plan
+              </Button>
+            </DialogClose>
+            <DialogClose asChild>
+              <Button type="button" variant="ghost" className="w-full">
+                Cancel
+              </Button>
+            </DialogClose>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+// Checkout Dialog
+const CheckoutDialog = () => {
+  const id = useId();
+  const [showCouponInput, setShowCouponInput] = useState(false);
+  const [couponCode, setCouponCode] = useState("");
+  const couponInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (showCouponInput && couponInputRef.current) {
+      couponInputRef.current.focus();
+    }
+  }, [showCouponInput]);
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>Upgrade Now</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <div className="mb-2 flex flex-col gap-2">
+          <div
+            className="flex size-11 shrink-0 items-center justify-center rounded-full border"
+            aria-hidden="true"
+          >
+            <StoreIcon className="opacity-80" size={16} />
+          </div>
+          <DialogHeader>
+            <DialogTitle className="text-left">Confirm and pay</DialogTitle>
+            <DialogDescription className="text-left">
+              Pay securely and cancel any time.
+            </DialogDescription>
+          </DialogHeader>
+        </div>
+
+        <form className="space-y-5">
+          <div className="space-y-4">
+            <RadioGroup className="grid-cols-2" defaultValue="yearly">
+              {/* Monthly */}
+              <label className="border-input has-data-[state=checked]:border-primary/50 has-focus-visible:border-ring has-focus-visible:ring-ring/50 relative flex cursor-pointer flex-col gap-1 rounded-md border px-4 py-3 shadow-xs transition-[color,box-shadow] outline-none has-focus-visible:ring-[3px]">
+                <RadioGroupItem
+                  id="radio-monthly"
+                  value="monthly"
+                  className="sr-only after:absolute after:inset-0"
+                />
+                <p className="text-foreground text-sm font-medium">Monthly</p>
+                <p className="text-muted-foreground text-sm">$29/month</p>
+              </label>
+              {/* Yearly */}
+              <label className="border-input has-data-[state=checked]:border-primary/50 has-focus-visible:border-ring has-focus-visible:ring-ring/50 relative flex cursor-pointer flex-col gap-1 rounded-md border px-4 py-3 shadow-xs transition-[color,box-shadow] outline-none has-focus-visible:ring-[3px]">
+                <RadioGroupItem
+                  id="radio-yearly"
+                  value="yearly"
+                  className="sr-only after:absolute after:inset-0"
+                />
+                <div className="inline-flex items-start justify-between gap-2">
+                  <p className="text-foreground text-sm font-medium">Yearly</p>
+                  <Badge>Popular</Badge>
+                </div>
+                <p className="text-muted-foreground text-sm">$290/year</p>
+              </label>
+            </RadioGroup>
+            
+            <div className="*:not-first:mt-2">
+              <Label htmlFor={`name-${id}`}>Name on card</Label>
+              <Input id={`name-${id}`} type="text" placeholder="Jonathon Smith" required />
+            </div>
+            
+            <div className="*:not-first:mt-2">
+              <Label>Card Details</Label>
+              <div className="rounded-md shadow-xs">
+                <div className="relative focus-within:z-10">
+                  <Input
+                    className="peer rounded-b-none pe-9 shadow-none"
+                    placeholder="1234 1234 1234 1234"
+                  />
+                </div>
+                <div className="-mt-px flex">
+                  <div className="min-w-0 flex-1 focus-within:z-10">
+                    <Input
+                      className="rounded-e-none rounded-t-none shadow-none"
+                      placeholder="MM/YY"
+                    />
+                  </div>
+                  <div className="-ms-px min-w-0 flex-1 focus-within:z-10">
+                    <Input
+                      className="rounded-s-none rounded-t-none shadow-none"
+                      placeholder="CVC"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {!showCouponInput ? (
+              <button
+                type="button"
+                onClick={() => setShowCouponInput(true)}
+                className="text-sm underline hover:no-underline"
+              >
+                + Add coupon
+              </button>
+            ) : (
+              <div className="*:not-first:mt-2">
+                <Label htmlFor={`coupon-${id}`}>Coupon code</Label>
+                <Input
+                  id={`coupon-${id}`}
+                  ref={couponInputRef}
+                  placeholder="Enter your code"
+                  value={couponCode}
+                  onChange={(e) => setCouponCode(e.target.value)}
+                />
+              </div>
+            )}
+          </div>
+          
+          <DialogClose asChild>
+            <Button type="button" className="w-full">
+              Subscribe
+            </Button>
+          </DialogClose>
+        </form>
+
+        <p className="text-muted-foreground text-center text-xs">
+          Payments are non-refundable. Cancel anytime.
+        </p>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 export default function SettingsPage() {
   const [activeCategory, setActiveCategory] = useState("profile");
   const [isDirty, setIsDirty] = useState(false);
@@ -127,12 +644,7 @@ export default function SettingsPage() {
                   J
                 </AvatarFallback>
               </Avatar>
-              <Button 
-                size="sm" 
-                className="absolute -bottom-1 -right-1 w-8 h-8 p-0 rounded-full bg-blue-500 hover:bg-blue-600 opacity-0 group-hover:opacity-100 transition-opacity"
-              >
-                <Camera className="w-4 h-4" />
-              </Button>
+              <EditProfileDialog />
             </div>
             <div className="flex-1">
               <h3 className="text-xl font-bold mb-2">Jonathon Smith</h3>
@@ -256,9 +768,7 @@ export default function SettingsPage() {
                 <p className="text-sm text-muted-foreground">Permanently delete your account and data</p>
               </div>
             </div>
-            <Button variant="destructive" size="sm">
-              Delete
-            </Button>
+            <DeleteAccountDialog />
           </div>
         </CardContent>
       </Card>
@@ -553,7 +1063,7 @@ export default function SettingsPage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Card className="w-5 h-5" />
+            <CreditCard className="w-5 h-5" />
             Current Plan
           </CardTitle>
         </CardHeader>
@@ -574,7 +1084,8 @@ export default function SettingsPage() {
           </div>
           
           <div className="mt-4 flex flex-wrap gap-2">
-            <Button variant="outline">Change Plan</Button>
+            <ChangePlanDialog />
+            <CheckoutDialog />
             <Button variant="outline">Cancel Subscription</Button>
           </div>
         </CardContent>
