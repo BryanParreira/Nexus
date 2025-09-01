@@ -2,6 +2,7 @@
 "use client";
 
 import type { Metadata } from "next";
+import { useId, useRef, useState } from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -41,6 +42,12 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import ContactsTable from "@/components/contacts-table";
 import { StatsGrid } from "@/components/stats-grid";
 import { toast } from "sonner";
@@ -65,22 +72,12 @@ import {
   UserPlus,
   Trash2,
   Edit,
-  Upload
+  Upload,
+  CheckIcon,
+  CopyIcon,
+  UserRoundPlusIcon
 } from 'lucide-react';
-import { useState } from 'react';
-
-interface NewContact {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  company: string;
-  position: string;
-  location: string;
-  notes: string;
-  tags: string[];
-  priority: 'low' | 'medium' | 'high';
-}
+import { cn } from "@/lib/utils";
 
 interface TeamSettings {
   autoSync: boolean;
@@ -94,24 +91,167 @@ interface TeamSettings {
   defaultView: 'table' | 'grid' | 'list';
 }
 
-export default function Page() {
-  const [isAddContactOpen, setIsAddContactOpen] = useState(false);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [currentTagInput, setCurrentTagInput] = useState('');
+// Invite Members Dialog Component
+function InviteMembersDialog({ children }: { children: React.ReactNode }) {
+  const id = useId();
+  const [emails, setEmails] = useState([
+    "mark@yourcompany.com",
+    "jane@yourcompany.com",
+    "",
+  ]);
+  const [copied, setCopied] = useState<boolean>(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const lastInputRef = useRef<HTMLInputElement>(null);
 
-  // New Contact state
-  const [newContact, setNewContact] = useState<NewContact>({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    company: '',
-    position: '',
-    location: '',
-    notes: '',
-    tags: [],
-    priority: 'medium'
-  });
+  const addEmail = () => {
+    setEmails([...emails, ""]);
+  };
+
+  const handleEmailChange = (index: number, value: string) => {
+    const newEmails = [...emails];
+    newEmails[index] = value;
+    setEmails(newEmails);
+  };
+
+  const handleCopy = () => {
+    if (inputRef.current) {
+      navigator.clipboard.writeText(inputRef.current.value);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }
+  };
+
+  const handleSendInvites = () => {
+    const validEmails = emails.filter(email => email.trim() !== '');
+    if (validEmails.length === 0) {
+      toast.error("No valid emails", {
+        description: "Please enter at least one email address.",
+      });
+      return;
+    }
+
+    console.log('Sending invites to:', validEmails);
+    
+    toast.success("Invites Sent", {
+      description: `Invitations have been sent to ${validEmails.length} team members.`,
+    });
+  };
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        {children}
+      </DialogTrigger>
+      <DialogContent
+        onOpenAutoFocus={(e) => {
+          e.preventDefault();
+          lastInputRef.current?.focus();
+        }}
+      >
+        <div className="flex flex-col gap-2">
+          <div
+            className="flex size-11 shrink-0 items-center justify-center rounded-full border"
+            aria-hidden="true"
+          >
+            <UserRoundPlusIcon className="opacity-80" size={16} />
+          </div>
+          <DialogHeader>
+            <DialogTitle className="text-left">Invite team members</DialogTitle>
+            <DialogDescription className="text-left">
+              Invite teammates to join your team and collaborate.
+            </DialogDescription>
+          </DialogHeader>
+        </div>
+
+        <form className="space-y-5">
+          <div className="space-y-4">
+            <div className="*:not-first:mt-2">
+              <Label>Invite via email</Label>
+              <div className="space-y-3">
+                {emails.map((email, index) => (
+                  <Input
+                    key={index}
+                    id={`team-email-${index + 1}`}
+                    placeholder="hi@yourcompany.com"
+                    type="email"
+                    value={email}
+                    onChange={(e) => handleEmailChange(index, e.target.value)}
+                    ref={index === emails.length - 1 ? lastInputRef : undefined}
+                  />
+                ))}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={addEmail}
+              className="text-sm underline hover:no-underline"
+            >
+              + Add another
+            </button>
+          </div>
+          <Button type="button" className="w-full" onClick={handleSendInvites}>
+            Send invites
+          </Button>
+        </form>
+
+        <hr className="my-1 border-t" />
+
+        <div className="*:not-first:mt-2">
+          <Label htmlFor={id}>Invite via magic link</Label>
+          <div className="relative">
+            <Input
+              ref={inputRef}
+              id={id}
+              className="pe-9"
+              type="text"
+              defaultValue="https://yourteam.com/refer/87689"
+              readOnly
+            />
+            <TooltipProvider delayDuration={0}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={handleCopy}
+                    className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed"
+                    aria-label={copied ? "Copied" : "Copy to clipboard"}
+                    disabled={copied}
+                  >
+                    <div
+                      className={cn(
+                        "transition-all",
+                        copied ? "scale-100 opacity-100" : "scale-0 opacity-0"
+                      )}
+                    >
+                      <CheckIcon
+                        className="stroke-emerald-500"
+                        size={16}
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <div
+                      className={cn(
+                        "absolute transition-all",
+                        copied ? "scale-0 opacity-0" : "scale-100 opacity-100"
+                      )}
+                    >
+                      <CopyIcon size={16} aria-hidden="true" />
+                    </div>
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent className="px-2 py-1 text-xs">
+                  Copy to clipboard
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+export default function Page() {
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   // Settings state
   const [teamSettings, setTeamSettings] = useState<TeamSettings>({
@@ -213,71 +353,6 @@ export default function Page() {
     });
   };
 
-  // Add Contact functionality
-  const handleAddTag = () => {
-    if (currentTagInput.trim() && !newContact.tags.includes(currentTagInput.trim())) {
-      setNewContact(prev => ({
-        ...prev,
-        tags: [...prev.tags, currentTagInput.trim()]
-      }));
-      setCurrentTagInput('');
-    }
-  };
-
-  const handleRemoveTag = (tagToRemove: string) => {
-    setNewContact(prev => ({
-      ...prev,
-      tags: prev.tags.filter(tag => tag !== tagToRemove)
-    }));
-  };
-
-  const handleAddContact = () => {
-    // Validation
-    if (!newContact.firstName.trim() || !newContact.lastName.trim()) {
-      toast.error("Validation Error", {
-        description: "First name and last name are required.",
-      });
-      return;
-    }
-
-    if (!newContact.email.trim()) {
-      toast.error("Validation Error", {
-        description: "Email address is required.",
-      });
-      return;
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(newContact.email)) {
-      toast.error("Validation Error", {
-        description: "Please enter a valid email address.",
-      });
-      return;
-    }
-
-    console.log('Adding new contact:', newContact);
-    
-    toast.success("Contact Added", {
-      description: `${newContact.firstName} ${newContact.lastName} has been added to your team.`,
-    });
-    
-    // Reset form
-    setNewContact({
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      company: '',
-      position: '',
-      location: '',
-      notes: '',
-      tags: [],
-      priority: 'medium'
-    });
-    setIsAddContactOpen(false);
-  };
-
   // Settings functionality
   const handleSaveSettings = () => {
     console.log('Saving team settings:', teamSettings);
@@ -299,15 +374,6 @@ export default function Page() {
     toast.success("Bulk Actions", {
       description: "Bulk action functionality would be available here.",
     });
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high': return 'bg-red-100 text-red-800 border-red-200';
-      case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'low': return 'bg-green-100 text-green-800 border-green-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
   };
 
   return (
@@ -559,223 +625,13 @@ export default function Page() {
             </DialogContent>
           </Dialog>
 
-          {/* Add Contact Button */}
-          <Dialog open={isAddContactOpen} onOpenChange={setIsAddContactOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm">
-                <Plus className="w-4 h-4 mr-2" />
-                Add Contact
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>Add New Contact</DialogTitle>
-                <DialogDescription>
-                  Create a new team contact with their details and information.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-4 py-4">
-                {/* Basic Information */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="firstName">First Name *</Label>
-                    <Input
-                      id="firstName"
-                      value={newContact.firstName}
-                      onChange={(e) => setNewContact(prev => ({ ...prev, firstName: e.target.value }))}
-                      placeholder="Enter first name"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="lastName">Last Name *</Label>
-                    <Input
-                      id="lastName"
-                      value={newContact.lastName}
-                      onChange={(e) => setNewContact(prev => ({ ...prev, lastName: e.target.value }))}
-                      placeholder="Enter last name"
-                    />
-                  </div>
-                </div>
-
-                {/* Contact Information */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="email">Email Address *</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={newContact.email}
-                      onChange={(e) => setNewContact(prev => ({ ...prev, email: e.target.value }))}
-                      placeholder="Enter email address"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      value={newContact.phone}
-                      onChange={(e) => setNewContact(prev => ({ ...prev, phone: e.target.value }))}
-                      placeholder="Enter phone number"
-                    />
-                  </div>
-                </div>
-
-                {/* Professional Information */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="company">Company</Label>
-                    <Input
-                      id="company"
-                      value={newContact.company}
-                      onChange={(e) => setNewContact(prev => ({ ...prev, company: e.target.value }))}
-                      placeholder="Enter company name"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="position">Position</Label>
-                    <Input
-                      id="position"
-                      value={newContact.position}
-                      onChange={(e) => setNewContact(prev => ({ ...prev, position: e.target.value }))}
-                      placeholder="Enter job position"
-                    />
-                  </div>
-                </div>
-
-                {/* Location & Priority */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="location">Location</Label>
-                    <Input
-                      id="location"
-                      value={newContact.location}
-                      onChange={(e) => setNewContact(prev => ({ ...prev, location: e.target.value }))}
-                      placeholder="Enter location"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="priority">Priority</Label>
-                    <Select
-                      value={newContact.priority}
-                      onValueChange={(value: 'low' | 'medium' | 'high') => setNewContact(prev => ({ ...prev, priority: value }))}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="low">Low</SelectItem>
-                        <SelectItem value="medium">Medium</SelectItem>
-                        <SelectItem value="high">High</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                {/* Tags */}
-                <div>
-                  <Label htmlFor="tags">Tags</Label>
-                  <div className="flex gap-2 mb-2">
-                    <Input
-                      id="tags"
-                      value={currentTagInput}
-                      onChange={(e) => setCurrentTagInput(e.target.value)}
-                      placeholder="Enter a tag"
-                      onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTag())}
-                    />
-                    <Button type="button" onClick={handleAddTag} variant="outline">
-                      Add
-                    </Button>
-                  </div>
-                  {newContact.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {newContact.tags.map((tag, index) => (
-                        <Badge key={index} variant="secondary" className="flex items-center gap-1">
-                          {tag}
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveTag(tag)}
-                            className="ml-1 text-xs hover:text-red-500"
-                          >
-                            ×
-                          </button>
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Notes */}
-                <div>
-                  <Label htmlFor="notes">Notes</Label>
-                  <Textarea
-                    id="notes"
-                    value={newContact.notes}
-                    onChange={(e) => setNewContact(prev => ({ ...prev, notes: e.target.value }))}
-                    placeholder="Enter any additional notes..."
-                    rows={3}
-                  />
-                </div>
-
-                {/* Contact Preview */}
-                {(newContact.firstName || newContact.lastName || newContact.email) && (
-                  <div className="border rounded-lg p-4 bg-gray-50">
-                    <Label className="text-sm font-medium text-gray-700 mb-2 block">Preview</Label>
-                    <div className="flex items-start gap-3">
-                      <Avatar className="w-12 h-12">
-                        <AvatarFallback>
-                          {(newContact.firstName?.[0] || '') + (newContact.lastName?.[0] || '')}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <div className="font-medium">
-                          {newContact.firstName} {newContact.lastName}
-                        </div>
-                        {newContact.email && (
-                          <div className="text-sm text-gray-600 flex items-center gap-1">
-                            <Mail className="w-3 h-3" />
-                            {newContact.email}
-                          </div>
-                        )}
-                        {newContact.phone && (
-                          <div className="text-sm text-gray-600 flex items-center gap-1">
-                            <Phone className="w-3 h-3" />
-                            {newContact.phone}
-                          </div>
-                        )}
-                        {newContact.company && (
-                          <div className="text-sm text-gray-600 flex items-center gap-1">
-                            <Building className="w-3 h-3" />
-                            {newContact.company}
-                            {newContact.position && ` - ${newContact.position}`}
-                          </div>
-                        )}
-                        {newContact.location && (
-                          <div className="text-sm text-gray-600 flex items-center gap-1">
-                            <MapPin className="w-3 h-3" />
-                            {newContact.location}
-                          </div>
-                        )}
-                        <div className="mt-1">
-                          <Badge className={getPriorityColor(newContact.priority)}>
-                            {newContact.priority} priority
-                          </Badge>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setIsAddContactOpen(false)}>
-                  Cancel
-                </Button>
-                <Button onClick={handleAddContact}>
-                  Add Contact
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
+          {/* Invite Members Button */}
+          <InviteMembersDialog>
+            <Button size="sm">
+              <UserRoundPlusIcon className="w-4 h-4 mr-2" />
+              Invite Members
+            </Button>
+          </InviteMembersDialog>
         </div>
       </header>
       
@@ -786,8 +642,8 @@ export default function Page() {
             <div className="space-y-1">
               <h1 className="text-2xl font-semibold">Oilà, Larry!</h1>
               <p className="text-sm text-muted-foreground">
-                Here&rsquo;s an overview of your contacts. Manage or create new
-                ones with ease!
+                Here&rsquo;s an overview of your contacts. Manage or invite new
+                team members with ease!
               </p>
             </div>
           </div>
@@ -876,4 +732,4 @@ export default function Page() {
       </div>
     </div>
   );
-}// app/dashboard/team/page.tsx
+}

@@ -20,25 +20,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  RiSlowDownLine,
-  RiLeafLine,
-  RiNavigationLine,
-  RiSpeakLine,
-  RiCodeSSlashLine,
-  RiGeminiLine,
-  RiLinksLine,
   RiDatabase2Line,
   RiDashboardLine,
   RiProjectorLine,
-  RiSettingsLine,
-  RiTaskLine,
   RiCalendarLine,
   RiTeamLine,
   RiChat1Line,
   RiCloseLine
 } from "@remixicon/react";
 
-// This is sample data.
+// Updated data with workflow-based organization
 const data = {
   user: {
     name: "Mark Bannert",
@@ -48,32 +39,37 @@ const data = {
   },
   navMain: [
     {
-      title: "Main",
+      title: "Overview",
       items: [
         {
           title: "Dashboard",
           url: "/dashboard",
           icon: RiDashboardLine,
         },
+      ],
+    },
+    {
+      title: "Communication",
+      items: [
         {
           title: "Chat",
           url: "/dashboard/chat",
           icon: RiChat1Line,
         },
         {
-          title: "Schema",
-          url: "/dashboard/schema",
-          icon: RiDatabase2Line,
+          title: "Team",
+          url: "/dashboard/team",
+          icon: RiTeamLine,
         },
+      ],
+    },
+    {
+      title: "Planning & Management",
+      items: [
         {
           title: "Calendar",
           url: "/dashboard/calendar",
           icon: RiCalendarLine,
-        },
-        {
-          title: "Team",
-          url: "/dashboard/team",
-          icon: RiTeamLine,
         },
         {
           title: "Projects",
@@ -81,9 +77,9 @@ const data = {
           icon: RiProjectorLine,
         },
         {
-          title: "Settings",
-          url: "/dashboard/settings",
-          icon: RiSettingsLine,
+          title: "Schema",
+          url: "/dashboard/schema",
+          icon: RiDatabase2Line,
         },
       ],
     },
@@ -128,7 +124,7 @@ function SidebarLogo() {
   );
 }
 
-// Search data based on your app structure
+// Updated search data to match new structure (removed Settings)
 const searchData = [
   {
     title: "Dashboard",
@@ -143,6 +139,13 @@ const searchData = [
     description: "Chat and messaging",
     keywords: ["message", "conversation", "talk", "chat", "communicate"],
     icon: RiChat1Line,
+  },
+  {
+    title: "Team",
+    url: "/dashboard/team",
+    description: "Team management",
+    keywords: ["members", "users", "colleagues", "team", "staff"],
+    icon: RiTeamLine,
   },
   {
     title: "Calendar",
@@ -164,27 +167,6 @@ const searchData = [
     description: "Database schema and structure",
     keywords: ["database", "structure", "tables", "schema", "data"],
     icon: RiDatabase2Line,
-  },
-  {
-    title: "Team",
-    url: "/dashboard/team",
-    description: "Team management",
-    keywords: ["members", "users", "colleagues", "team", "staff"],
-    icon: RiTeamLine,
-  },
-  {
-    title: "Settings",
-    url: "/dashboard/settings",
-    description: "Application settings and preferences",
-    keywords: ["config", "preferences", "options", "settings", "configuration"],
-    icon: RiSettingsLine,
-  },
-  {
-    title: "Authentication",
-    url: "/dashboard/auth",
-    description: "User authentication and security",
-    keywords: ["login", "auth", "security", "users", "authentication"],
-    icon: RiTeamLine,
   },
 ];
 
