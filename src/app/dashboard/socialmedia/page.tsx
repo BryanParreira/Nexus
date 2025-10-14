@@ -5,9 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import {
   Calendar as CalendarIcon, Plus, ChevronLeft, ChevronRight, Instagram,
-  Linkedin, Youtube, Twitter, X, Upload, Sparkles, Clock, Send, Edit,
-  Copy, Trash2, Image as ImageIcon, Hash, Users, Eye, Heart, TrendingUp,
-  Grid3x3, ChevronDown, Filter, Download, MessageSquare, Share2, BarChart3
+  Linkedin, Youtube, Twitter, X, Upload, Sparkles, Clock, Edit,
+  Copy, Trash2, Hash, Users, Eye, Heart, TrendingUp,
+  Grid3x3, ChevronDown, Download, MessageSquare, BarChart3,
+  PanelLeft
 } from 'lucide-react';
 
 // Types
@@ -109,7 +110,7 @@ const ContentCalendar: React.FC<{ posts: Post[]; onDateClick: (date: Date) => vo
   };
 
   return (
-    <div className="bg-[#111] rounded-xl border border-[#1f1f24] p-6">
+    <div className="bg-[#0a0a0f] rounded-xl border border-[#1f1f24] p-6">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-bold text-white">
           {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
@@ -117,13 +118,13 @@ const ContentCalendar: React.FC<{ posts: Post[]; onDateClick: (date: Date) => vo
         <div className="flex gap-2">
           <button
             onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1))}
-            className="p-2 hover:bg-[#111] rounded-xl transition-colors"
+            className="p-2 hover:bg-[#1a1a1f] rounded-xl transition-colors"
           >
             <ChevronLeft className="w-5 h-5 text-gray-400" />
           </button>
           <button
             onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1))}
-            className="p-2 hover:bg-[#111] rounded-xl transition-colors"
+            className="p-2 hover:bg-[#1a1a1f] rounded-xl transition-colors"
           >
             <ChevronRight className="w-5 h-5 text-gray-400" />
           </button>
@@ -151,7 +152,7 @@ const ContentCalendar: React.FC<{ posts: Post[]; onDateClick: (date: Date) => vo
             <button
               key={day}
               onClick={() => onDateClick(new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day))}
-              className={`aspect-square p-2 rounded-xl hover:bg-[#111] transition-colors text-left relative ${
+              className={`aspect-square p-2 rounded-xl hover:bg-[#1a1a1f] transition-colors text-left relative ${
                 isToday ? 'bg-blue-500/10 border-2 border-blue-500/30' : ''
               }`}
             >
@@ -228,14 +229,14 @@ const PostComposerModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-[#0f0f14] rounded-2xl border border-[#1f1f24] shadow-2xl"
+          className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-[#0a0a0f] rounded-2xl border border-[#1f1f24] shadow-2xl"
         >
-          <div className="sticky top-0 bg-[#0f0f14] border-b border-[#1f1f24] px-8 py-6 flex items-center justify-between z-10">
+          <div className="sticky top-0 bg-[#0a0a0f] border-b border-[#1f1f24] px-8 py-6 flex items-center justify-between z-10">
             <div>
               <h2 className="text-2xl font-bold text-white">Create Post</h2>
               <p className="text-sm text-gray-400 mt-1">Schedule content across your social platforms</p>
             </div>
-            <button onClick={onClose} className="p-2 hover:bg-[#111] rounded-xl transition-colors">
+            <button onClick={onClose} className="p-2 hover:bg-[#1a1a1f] rounded-xl transition-colors">
               <X className="w-5 h-5 text-gray-400" />
             </button>
           </div>
@@ -257,7 +258,7 @@ const PostComposerModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
                       className={`px-4 py-3 rounded-xl font-medium transition-all border-2 flex items-center gap-2 ${
                         isSelected
                           ? `bg-gradient-to-r ${platformColors[platform]} text-white border-transparent shadow-lg`
-                          : 'bg-[#111] text-gray-400 border-[#1f1f24] hover:border-[#2a2a2f]'
+                          : 'bg-[#1a1a1f] text-gray-400 border-[#1f1f24] hover:border-[#2a2a2f]'
                       }`}
                     >
                       {typeof Icon === 'string' ? (
@@ -290,7 +291,7 @@ const PostComposerModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
                 onChange={(e) => setCaption(e.target.value)}
                 rows={5}
                 maxLength={2200}
-                className="w-full px-4 py-3 bg-[#111] border border-[#1f1f24] rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                className="w-full px-4 py-3 bg-[#1a1a1f] border border-[#1f1f24] rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                 placeholder="Write your caption here..."
               />
               <div className="flex items-center justify-between mt-2">
@@ -314,7 +315,7 @@ const PostComposerModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
                     <button
                       key={idx}
                       onClick={() => setCaption(suggestion)}
-                      className="w-full p-3 bg-[#111]/50 hover:bg-[#1a1a1f] rounded-lg text-xs text-gray-300 text-left transition-colors border border-[#1f1f24]"
+                      className="w-full p-3 bg-[#1a1a1f]/50 hover:bg-[#1f1f24] rounded-lg text-xs text-gray-300 text-left transition-colors border border-[#1f1f24]"
                     >
                       {suggestion}
                     </button>
@@ -344,14 +345,14 @@ const PostComposerModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
                 <label className="block text-sm font-semibold text-white mb-2">Schedule Date</label>
                 <input
                   type="date"
-                  className="w-full px-4 py-3 bg-[#111] border border-[#1f1f24] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3 bg-[#1a1a1f] border border-[#1f1f24] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-white mb-2">Schedule Time</label>
                 <input
                   type="time"
-                  className="w-full px-4 py-3 bg-[#111] border border-[#1f1f24] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3 bg-[#1a1a1f] border border-[#1f1f24] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
@@ -360,7 +361,7 @@ const PostComposerModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
             <div className="flex gap-3 pt-6 border-t border-[#1f1f24]">
               <button
                 onClick={onClose}
-                className="flex-1 px-6 py-3 bg-[#111] hover:bg-[#25252a] text-gray-300 rounded-xl font-semibold transition-colors border border-[#2a2a2f]"
+                className="flex-1 px-6 py-3 bg-[#1a1a1f] hover:bg-[#25252a] text-gray-300 rounded-xl font-semibold transition-colors border border-[#2a2a2f]"
               >
                 Cancel
               </button>
@@ -388,104 +389,115 @@ export default function SocialMediaPage() {
   const [posts] = useState<Post[]>(mockPosts);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white">
-      {/* Top Nav */}
-      <div className="border-b border-[#111] bg-[#0f0f14]">
-        <div className="max-w-[1800px] mx-auto px-8 py-5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <button className="p-2 hover:bg-[#111] rounded-xl transition-colors">
-                <svg width="18" height="18" viewBox="0 0 16 16" fill="none" className="text-gray-400">
-                  <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
-              <div className="flex items-center gap-2 text-sm">
-                <span className="text-gray-500">Dashboard</span>
-                <ChevronRight className="w-4 h-4 text-gray-600" />
-                <span className="text-white font-semibold">Social Media</span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <button className="px-4 py-2.5 bg-[#111] hover:bg-[#25252a] border border-[#2a2a2f] rounded-xl text-sm text-gray-300 transition-colors flex items-center gap-2">
-                <CalendarIcon className="w-4 h-4" />
-                Last 7 days
-                <ChevronDown className="w-4 h-4" />
-              </button>
-              <select
-                value={platformFilter}
-                onChange={(e) => setPlatformFilter(e.target.value)}
-                className="px-4 py-2.5 bg-[#111] border border-[#2a2a2f] rounded-xl text-sm text-white focus:outline-none appearance-none cursor-pointer"
-                style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E\")", backgroundPosition: 'right 0.75rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.25em 1.25em', paddingRight: '2.75rem' }}
-              >
-                <option value="all">All Platforms</option>
-                <option value="instagram">Instagram</option>
-                <option value="linkedin">LinkedIn</option>
-                <option value="twitter">Twitter</option>
-                <option value="tiktok">TikTok</option>
-              </select>
-              <button
-                onClick={() => setIsComposerOpen(true)}
-                className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl text-sm font-semibold transition-all flex items-center gap-2 shadow-lg shadow-blue-500/20"
-              >
-                <Plus className="w-4 h-4" />
-                New Post
-              </button>
-            </div>
+    <div className="w-full h-full">
+      {/* Header */}
+      <header className="flex flex-wrap gap-3 min-h-20 py-4 px-4 md:px-6 lg:px-8 shrink-0 items-center transition-all ease-linear border-b">
+        {/* Left side */}
+        <div className="flex flex-1 items-center gap-2">
+          <button 
+            className="-ms-1 p-2 hover:bg-accent rounded-lg transition-colors" 
+            aria-label="Toggle Sidebar"
+          >
+            <PanelLeft className="w-5 h-5" />
+          </button>
+          <div className="max-lg:hidden lg:contents">
+            <div className="h-4 w-px bg-border me-2" />
+            <nav aria-label="breadcrumb">
+              <ol className="flex items-center gap-2 text-sm">
+                <li className="hidden md:block">
+                  <a href="/dashboard" className="text-muted-foreground hover:text-foreground transition-colors">
+                    Dashboard
+                  </a>
+                </li>
+                <li className="hidden md:block">
+                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                </li>
+                <li>
+                  <span className="font-semibold">Social Media</span>
+                </li>
+              </ol>
+            </nav>
           </div>
         </div>
-      </div>
+        {/* Right side */}
+        <div className="flex items-center gap-2">
+          <button className="px-4 py-2 bg-background hover:bg-accent border border-border rounded-lg text-sm transition-colors flex items-center gap-2">
+            <CalendarIcon className="w-4 h-4" />
+            Last 7 days
+            <ChevronDown className="w-4 h-4" />
+          </button>
+          <select
+            value={platformFilter}
+            onChange={(e) => setPlatformFilter(e.target.value)}
+            className="px-4 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none appearance-none cursor-pointer"
+            style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E\")", backgroundPosition: 'right 0.75rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.25em 1.25em', paddingRight: '2.75rem' }}
+          >
+            <option value="all">All Platforms</option>
+            <option value="instagram">Instagram</option>
+            <option value="linkedin">LinkedIn</option>
+            <option value="twitter">Twitter</option>
+            <option value="tiktok">TikTok</option>
+          </select>
+          <button
+            onClick={() => setIsComposerOpen(true)}
+            className="px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-sm font-semibold transition-all flex items-center gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            New Post
+          </button>
+        </div>
+      </header>
 
       {/* Main Content */}
       <div className="max-w-[1800px] mx-auto px-8 py-8 space-y-8">
-        {/* Header */}
+        {/* Page Header */}
         <div>
-          <h1 className="text-4xl font-bold text-white mb-3">Social Media Management</h1>
-          <p className="text-lg text-gray-400">Create, schedule, and analyze your social media content</p>
+          <h1 className="text-4xl font-bold mb-3">Social Media Management</h1>
+          <p className="text-lg text-muted-foreground">Create, schedule, and analyze your social media content</p>
         </div>
 
         {/* Analytics Cards */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-[#111] rounded-xl p-6 border border-[#1f1f24]">
+          <div className="bg-card rounded-xl p-6 border border-border">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-sm text-gray-400">Total Reach</span>
-              <Eye className="w-5 h-5 text-blue-400" />
+              <span className="text-sm text-muted-foreground">Total Reach</span>
+              <Eye className="w-5 h-5 text-blue-500" />
             </div>
-            <p className="text-3xl font-bold text-white mb-1">139.8K</p>
-            <p className="text-xs text-emerald-400 flex items-center gap-1">
+            <p className="text-3xl font-bold mb-1">139.8K</p>
+            <p className="text-xs text-emerald-500 flex items-center gap-1">
               <TrendingUp className="w-3 h-3" />
               +18.2% from last week
             </p>
           </div>
 
-          <div className="bg-[#111] rounded-xl p-6 border border-[#1f1f24]">
+          <div className="bg-card rounded-xl p-6 border border-border">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-sm text-gray-400">Impressions</span>
-              <BarChart3 className="w-5 h-5 text-purple-400" />
+              <span className="text-sm text-muted-foreground">Impressions</span>
+              <BarChart3 className="w-5 h-5 text-purple-500" />
             </div>
-            <p className="text-3xl font-bold text-white mb-1">220.4K</p>
-            <p className="text-xs text-emerald-400 flex items-center gap-1">
+            <p className="text-3xl font-bold mb-1">220.4K</p>
+            <p className="text-xs text-emerald-500 flex items-center gap-1">
               <TrendingUp className="w-3 h-3" />
               +12.5% from last week
             </p>
           </div>
 
-          <div className="bg-[#111] rounded-xl p-6 border border-[#1f1f24]">
+          <div className="bg-card rounded-xl p-6 border border-border">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-sm text-gray-400">Engagement Rate</span>
-              <Heart className="w-5 h-5 text-pink-400" />
+              <span className="text-sm text-muted-foreground">Engagement Rate</span>
+              <Heart className="w-5 h-5 text-pink-500" />
             </div>
-            <p className="text-3xl font-bold text-white mb-1">4.1%</p>
-            <p className="text-xs text-gray-400">+0.3% from last week</p>
+            <p className="text-3xl font-bold mb-1">4.1%</p>
+            <p className="text-xs text-muted-foreground">+0.3% from last week</p>
           </div>
 
-          <div className="bg-[#111] rounded-xl p-6 border border-[#1f1f24]">
+          <div className="bg-card rounded-xl p-6 border border-border">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-sm text-gray-400">Total Followers</span>
-              <Users className="w-5 h-5 text-emerald-400" />
+              <span className="text-sm text-muted-foreground">Total Followers</span>
+              <Users className="w-5 h-5 text-emerald-500" />
             </div>
-            <p className="text-3xl font-bold text-white mb-1">43.2K</p>
-            <p className="text-xs text-emerald-400 flex items-center gap-1">
+            <p className="text-3xl font-bold mb-1">43.2K</p>
+            <p className="text-xs text-emerald-500 flex items-center gap-1">
               <TrendingUp className="w-3 h-3" />
               +520 this week
             </p>
@@ -503,14 +515,14 @@ export default function SocialMediaPage() {
             <div>
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h2 className="text-2xl font-bold text-white mb-1">Scheduled Posts</h2>
-                  <p className="text-sm text-gray-400">Upcoming content across all platforms</p>
+                  <h2 className="text-2xl font-bold mb-1">Scheduled Posts</h2>
+                  <p className="text-sm text-muted-foreground">Upcoming content across all platforms</p>
                 </div>
               </div>
 
               <div className="grid gap-4">
                 {posts.filter(p => p.status === 'scheduled').map(post => (
-                  <div key={post.id} className="bg-[#111] rounded-xl p-6 border border-[#1f1f24] hover:border-[#2a2a2f] transition-colors">
+                  <div key={post.id} className="bg-card rounded-xl p-6 border border-border hover:border-accent transition-colors">
                     <div className="flex gap-4">
                       {post.media[0] && (
                         <img
@@ -521,7 +533,7 @@ export default function SocialMediaPage() {
                       )}
                       
                       <div className="flex-1">
-                        <p className="text-sm text-white mb-3 line-clamp-2">{post.caption}</p>
+                        <p className="text-sm mb-3 line-clamp-2">{post.caption}</p>
                         
                         <div className="flex items-center gap-3 mb-3">
                           {post.platforms.map(platform => {
@@ -541,7 +553,7 @@ export default function SocialMediaPage() {
                           })}
                         </div>
 
-                        <div className="flex items-center gap-4 text-xs text-gray-400">
+                        <div className="flex items-center gap-4 text-xs text-muted-foreground">
                           <span className="flex items-center gap-1.5">
                             <Clock className="w-3.5 h-3.5" />
                             {post.scheduledFor && new Date(post.scheduledFor).toLocaleString('en-US', {
@@ -551,21 +563,21 @@ export default function SocialMediaPage() {
                               minute: '2-digit'
                             })}
                           </span>
-                          <span className="px-2 py-1 bg-blue-500/10 text-blue-400 rounded-lg border border-blue-500/20">
+                          <span className="px-2 py-1 bg-blue-500/10 text-blue-500 rounded-lg border border-blue-500/20">
                             Scheduled
                           </span>
                         </div>
                       </div>
 
                       <div className="flex gap-2">
-                        <button className="p-2 hover:bg-[#111] rounded-lg transition-colors">
-                          <Edit className="w-4 h-4 text-gray-400" />
+                        <button className="p-2 hover:bg-accent rounded-lg transition-colors">
+                          <Edit className="w-4 h-4 text-muted-foreground" />
                         </button>
-                        <button className="p-2 hover:bg-[#111] rounded-lg transition-colors">
-                          <Copy className="w-4 h-4 text-gray-400" />
+                        <button className="p-2 hover:bg-accent rounded-lg transition-colors">
+                          <Copy className="w-4 h-4 text-muted-foreground" />
                         </button>
-                        <button className="p-2 hover:bg-[#111] rounded-lg transition-colors">
-                          <Trash2 className="w-4 h-4 text-gray-400" />
+                        <button className="p-2 hover:bg-accent rounded-lg transition-colors">
+                          <Trash2 className="w-4 h-4 text-muted-foreground" />
                         </button>
                       </div>
                     </div>
@@ -578,29 +590,29 @@ export default function SocialMediaPage() {
           {/* Sidebar */}
           <div className="space-y-8">
             {/* Follower Growth */}
-            <div className="bg-[#111] rounded-xl p-6 border border-[#1f1f24]">
-              <h3 className="text-lg font-bold text-white mb-5">Follower Growth</h3>
+            <div className="bg-card rounded-xl p-6 border border-border">
+              <h3 className="text-lg font-bold mb-5">Follower Growth</h3>
               <ResponsiveContainer width="100%" height={180}>
                 <LineChart data={followerGrowth}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1f1f24" vertical={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
                   <XAxis 
                     dataKey="date" 
-                    stroke="#6b7280" 
+                    stroke="hsl(var(--muted-foreground))" 
                     style={{ fontSize: '10px' }}
                     tickLine={false}
                   />
                   <YAxis 
-                    stroke="#6b7280" 
+                    stroke="hsl(var(--muted-foreground))" 
                     style={{ fontSize: '10px' }}
                     tickLine={false}
                   />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: '#111',
-                      border: '1px solid #1f1f24',
+                      backgroundColor: 'hsl(var(--card))',
+                      border: '1px solid hsl(var(--border))',
                       borderRadius: '12px',
                       fontSize: '11px',
-                      color: '#fff'
+                      color: 'hsl(var(--foreground))'
                     }}
                   />
                   <Line 
@@ -612,22 +624,22 @@ export default function SocialMediaPage() {
                   />
                 </LineChart>
               </ResponsiveContainer>
-              <div className="mt-5 pt-5 border-t border-[#1f1f24]">
+              <div className="mt-5 pt-5 border-t border-border">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-400">Total Followers</span>
-                  <span className="text-xl font-bold text-white">43.2K</span>
+                  <span className="text-sm text-muted-foreground">Total Followers</span>
+                  <span className="text-xl font-bold">43.2K</span>
                 </div>
               </div>
             </div>
 
             {/* Platform Performance */}
-            <div className="bg-[#111] rounded-xl p-6 border border-[#1f1f24]">
-              <h3 className="text-lg font-bold text-white mb-5">Platform Performance</h3>
+            <div className="bg-card rounded-xl p-6 border border-border">
+              <h3 className="text-lg font-bold mb-5">Platform Performance</h3>
               <div className="space-y-4">
                 {analyticsData.map(platform => {
                   const Icon = platformIcons[platform.platform.toLowerCase() as Platform];
                   return (
-                    <div key={platform.platform} className="flex items-center justify-between p-4 bg-[#1a1a1f] rounded-xl hover:bg-[#1f1f24] transition-colors">
+                    <div key={platform.platform} className="flex items-center justify-between p-4 bg-accent/50 rounded-xl hover:bg-accent transition-colors">
                       <div className="flex items-center gap-3">
                         <div className={`p-2 rounded-lg bg-gradient-to-r ${platformColors[platform.platform.toLowerCase() as Platform]}`}>
                           {typeof Icon === 'string' ? (
@@ -637,13 +649,13 @@ export default function SocialMediaPage() {
                           )}
                         </div>
                         <div>
-                          <div className="text-sm font-semibold text-white">{platform.platform}</div>
-                          <div className="text-xs text-gray-500">{platform.followers.toLocaleString()} followers</div>
+                          <div className="text-sm font-semibold">{platform.platform}</div>
+                          <div className="text-xs text-muted-foreground">{platform.followers.toLocaleString()} followers</div>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-sm font-bold text-emerald-400">{(platform.engagement / platform.reach * 100).toFixed(1)}%</div>
-                        <div className="text-xs text-gray-500">engagement</div>
+                        <div className="text-sm font-bold text-emerald-500">{(platform.engagement / platform.reach * 100).toFixed(1)}%</div>
+                        <div className="text-xs text-muted-foreground">engagement</div>
                       </div>
                     </div>
                   );
@@ -652,19 +664,19 @@ export default function SocialMediaPage() {
             </div>
 
             {/* Quick Actions */}
-            <div className="bg-[#111] rounded-xl p-6 border border-[#1f1f24]">
-              <h3 className="text-lg font-bold text-white mb-4">Quick Actions</h3>
+            <div className="bg-card rounded-xl p-6 border border-border">
+              <h3 className="text-lg font-bold mb-4">Quick Actions</h3>
               <div className="space-y-3">
-                <button className="w-full flex items-center gap-3 p-4 bg-[#1a1a1f] hover:bg-[#1f1f24] rounded-xl text-sm text-gray-300 transition-colors">
-                  <Grid3x3 className="w-4 h-4 text-blue-400" />
+                <button className="w-full flex items-center gap-3 p-4 bg-accent/50 hover:bg-accent rounded-xl text-sm transition-colors">
+                  <Grid3x3 className="w-4 h-4 text-blue-500" />
                   Media Library
                 </button>
-                <button className="w-full flex items-center gap-3 p-4 bg-[#1a1a1f] hover:bg-[#1f1f24] rounded-xl text-sm text-gray-300 transition-colors">
-                  <BarChart3 className="w-4 h-4 text-purple-400" />
+                <button className="w-full flex items-center gap-3 p-4 bg-accent/50 hover:bg-accent rounded-xl text-sm transition-colors">
+                  <BarChart3 className="w-4 h-4 text-purple-500" />
                   Analytics Dashboard
                 </button>
-                <button className="w-full flex items-center gap-3 p-4 bg-[#1a1a1f] hover:bg-[#1f1f24] rounded-xl text-sm text-gray-300 transition-colors">
-                  <MessageSquare className="w-4 h-4 text-emerald-400" />
+                <button className="w-full flex items-center gap-3 p-4 bg-accent/50 hover:bg-accent rounded-xl text-sm transition-colors">
+                  <MessageSquare className="w-4 h-4 text-emerald-500" />
                   Inbox & Comments
                 </button>
               </div>
@@ -673,13 +685,13 @@ export default function SocialMediaPage() {
         </div>
 
         {/* Top Performing Posts */}
-        <div className="bg-[#111] rounded-xl border border-[#1f1f24] p-8">
+        <div className="bg-card rounded-xl border border-border p-8">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-2xl font-bold text-white mb-1">Top Performing Posts</h2>
-              <p className="text-sm text-gray-400">Best performing content this month</p>
+              <h2 className="text-2xl font-bold mb-1">Top Performing Posts</h2>
+              <p className="text-sm text-muted-foreground">Best performing content this month</p>
             </div>
-            <button className="px-4 py-2 bg-[#1a1a1f] hover:bg-[#25252a] border border-[#2a2a2f] rounded-xl text-sm text-gray-300 transition-colors flex items-center gap-2">
+            <button className="px-4 py-2 bg-accent hover:bg-accent/80 border border-border rounded-xl text-sm transition-colors flex items-center gap-2">
               <Download className="w-4 h-4" />
               Export Report
             </button>
@@ -687,25 +699,25 @@ export default function SocialMediaPage() {
 
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={analyticsData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1f1f24" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
               <XAxis 
                 dataKey="platform" 
-                stroke="#6b7280" 
+                stroke="hsl(var(--muted-foreground))" 
                 style={{ fontSize: '12px' }}
                 tickLine={false}
               />
               <YAxis 
-                stroke="#6b7280" 
+                stroke="hsl(var(--muted-foreground))" 
                 style={{ fontSize: '12px' }}
                 tickLine={false}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#111',
-                  border: '1px solid #1f1f24',
+                  backgroundColor: 'hsl(var(--card))',
+                  border: '1px solid hsl(var(--border))',
                   borderRadius: '12px',
                   fontSize: '12px',
-                  color: '#fff'
+                  color: 'hsl(var(--foreground))'
                 }}
               />
               <Bar dataKey="reach" fill="#3b82f6" radius={[8, 8, 0, 0]} name="Reach" />
