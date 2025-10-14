@@ -26,7 +26,10 @@ import {
   RiCalendarLine,
   RiTeamLine,
   RiChat1Line,
-  RiCloseLine
+  RiCloseLine,
+  RiBuildingLine,
+  RiSettings3Line,
+  RiBarChart2Line
 } from "@remixicon/react";
 
 // Updated data with workflow-based organization
@@ -79,17 +82,17 @@ const data = {
         {
           title: "Automation",
           url: "/dashboard/automation",
-          icon: RiDatabase2Line,
+          icon: RiSettings3Line,
         },
         {
           title: "Social Media",
           url: "/dashboard/socialmedia",
-          icon: RiDatabase2Line,
+          icon: RiBarChart2Line,
         },
         {
           title: "CRM",
           url: "/dashboard/crm",
-          icon: RiProjectorLine,
+          icon: RiBuildingLine,
         }
       ],
     },
