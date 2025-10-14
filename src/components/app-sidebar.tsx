@@ -77,10 +77,20 @@ const data = {
           icon: RiProjectorLine,
         },
         {
-          title: "Schema",
-          url: "/dashboard/schema",
+          title: "Automation",
+          url: "/dashboard/automation",
           icon: RiDatabase2Line,
         },
+        {
+          title: "Social Media",
+          url: "/dashboard/socialmedia",
+          icon: RiDatabase2Line,
+        },
+        {
+          title: "CRM",
+          url: "/dashboard/crm",
+          icon: RiProjectorLine,
+        }
       ],
     },
   ],
