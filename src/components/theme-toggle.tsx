@@ -1,57 +1,42 @@
-"use client";
+"use client"
 
-import { RiMoonClearLine, RiSunLine } from "@remixicon/react";
-import { useTheme } from "next-themes";
-import { useId, useState } from "react";
+import * as React from "react"
+import { Moon, Sun } from "lucide-react"
+import { useTheme } from "@/components/theme-provider"
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
-export default function ThemeToggle() {
-  const id = useId();
-  const { theme, setTheme } = useTheme();
-  const [system, setSystem] = useState(false);
-
-  const smartToggle = () => {
-    const prefersDarkScheme = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    ).matches;
-    if (theme === "system") {
-      setTheme(prefersDarkScheme ? "light" : "dark");
-      setSystem(false);
-    } else if (
-      (theme === "light" && !prefersDarkScheme) ||
-      (theme === "dark" && prefersDarkScheme)
-    ) {
-      setTheme(theme === "light" ? "dark" : "light");
-      setSystem(false);
-    } else {
-      setTheme("system");
-      setSystem(true);
-    }
-  };
+export function ThemeToggle() {
+  const { setTheme } = useTheme()
 
   return (
-    <div className="flex flex-col justify-center">
-      <input
-        type="checkbox"
-        name="theme-toggle"
-        id={id}
-        className="peer sr-only"
-        checked={system}
-        onChange={smartToggle}
-        aria-label="Toggle dark mode"
-      />
-      <label
-        className="text-muted-foreground/80 hover:text-muted-foreground rounded peer-focus-visible:border-ring peer-focus-visible:ring-ring/50 relative inline-flex size-8 cursor-pointer items-center justify-center transition-[color,box-shadow] outline-none peer-focus-visible:ring-[3px]"
-        htmlFor={id}
-        aria-hidden="true"
-      >
-        <RiSunLine className="dark:hidden" size={22} aria-hidden="true" />
-        <RiMoonClearLine
-          className="hidden dark:block"
-          size={22}
-          aria-hidden="true"
-        />
-        <span className="sr-only">Switch to system/light/dark version</span>
-      </label>
-    </div>
-  );
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon" className="h-9 w-9">
+          <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          <span className="sr-only">Toggle theme</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => setTheme("light")}>
+          <Sun className="mr-2 h-4 w-4" />
+          <span>Light</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("dark")}>
+          <Moon className="mr-2 h-4 w-4" />
+          <span>Dark</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("system")}>
+          <span className="mr-2 h-4 w-4">💻</span>
+          <span>System</span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
 }

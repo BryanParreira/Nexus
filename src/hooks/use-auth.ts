@@ -53,7 +53,7 @@ export function useAuth() {
     localStorage.removeItem('user');
     setIsAuthenticated(false);
     setUser(null);
-    router.push('/auth/signin');
+    router.push('/signin');
   };
 
   const signup = (token: string, userData: User) => {

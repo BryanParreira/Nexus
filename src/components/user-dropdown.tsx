@@ -1,3 +1,5 @@
+"use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,9 +12,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { RiSettingsLine, RiTeamLine, RiLogoutBoxLine } from "@remixicon/react";
+import { RiSettingsLine, RiTeamLine, RiLogoutBoxLine, RiSunLine, RiMoonLine, RiComputerLine } from "@remixicon/react";
+import { useTheme } from "@/components/theme-provider";
 
 export default function UserDropdown() {
+  const { setTheme } = useTheme();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -50,6 +55,24 @@ export default function UserDropdown() {
           <DropdownMenuItem>
             <RiTeamLine size={16} className="opacity-60" aria-hidden="true" />
             <span>Affiliate area</span>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+          Theme
+        </DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuItem onClick={() => setTheme("light")}>
+            <RiSunLine size={16} className="opacity-60" aria-hidden="true" />
+            <span>Light</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setTheme("dark")}>
+            <RiMoonLine size={16} className="opacity-60" aria-hidden="true" />
+            <span>Dark</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setTheme("system")}>
+            <RiComputerLine size={16} className="opacity-60" aria-hidden="true" />
+            <span>System</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

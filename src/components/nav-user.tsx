@@ -15,7 +15,6 @@ import {
   RiComputerLine,
 } from "@remixicon/react";
 import { CheckIcon, RefreshCcwIcon } from "lucide-react";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -47,11 +46,12 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Switch } from "@/components/ui/switch";
+import { useTheme } from "@/components/theme-provider";
 
 // Change Plan Dialog Component
 function ChangePlanDialog({ children }: { children: React.ReactNode }) {
   const id = useId();
-  
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -72,7 +72,6 @@ function ChangePlanDialog({ children }: { children: React.ReactNode }) {
             </DialogDescription>
           </DialogHeader>
         </div>
-
         <form className="space-y-5">
           <RadioGroup className="gap-2" defaultValue="2">
             {/* Radio card #1 */}
@@ -130,7 +129,6 @@ function ChangePlanDialog({ children }: { children: React.ReactNode }) {
               </div>
             </div>
           </RadioGroup>
-
           <div className="space-y-3">
             <p>
               <strong className="text-sm font-medium">Features include:</strong>
@@ -186,7 +184,6 @@ function ChangePlanDialog({ children }: { children: React.ReactNode }) {
               </li>
             </ul>
           </div>
-
           <div className="grid gap-2">
             <Button type="button" className="w-full">
               Change plan
@@ -213,9 +210,9 @@ export function NavUser({
   };
 }) {
   const router = useRouter();
-  
+  const { theme, setTheme } = useTheme();
+
   // Settings states
-  const [theme, setTheme] = React.useState('dark');
   const [emailNotifications, setEmailNotifications] = React.useState(true);
   const [pushNotifications, setPushNotifications] = React.useState(true);
   const [securityAlerts, setSecurityAlerts] = React.useState(true);
@@ -231,7 +228,7 @@ export function NavUser({
     router.push('/dashboard/profile');
   };
 
-  const handleThemeChange = (newTheme: string) => {
+  const handleThemeChange = (newTheme: "light" | "dark" | "system") => {
     setTheme(newTheme);
     console.log(`Theme changed to: ${newTheme}`);
   };
@@ -280,7 +277,7 @@ export function NavUser({
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-64 max-w-[95vw] dark bg-sidebar"
+            className="w-64 max-w-[95vw] bg-sidebar"
             side="bottom"
             align="end"
             sideOffset={4}
@@ -300,12 +297,10 @@ export function NavUser({
                 </div>
               </div>
             </DropdownMenuLabel>
-
             <DropdownMenuSeparator />
-
             <DropdownMenuGroup>
               {/* Profile */}
-              <DropdownMenuItem 
+              <DropdownMenuItem
                 className="gap-3 focus:bg-sidebar-accent cursor-pointer p-3"
                 onClick={handleProfile}
               >
@@ -460,11 +455,9 @@ export function NavUser({
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
             </DropdownMenuGroup>
-
             <DropdownMenuSeparator />
-
             {/* Logout */}
-            <DropdownMenuItem 
+            <DropdownMenuItem
               className="gap-3 focus:bg-sidebar-accent cursor-pointer text-red-600 focus:text-red-600 p-3"
               onClick={handleLogout}
             >

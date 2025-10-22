@@ -21,7 +21,7 @@ export default function DashboardLayout({
     
     if (!token) {
       // No token found, redirect to login
-      router.push('/auth/login');
+      router.push('/signin');
     } else {
       // Token found, user is authenticated
       setIsAuthenticated(true);
@@ -32,10 +32,10 @@ export default function DashboardLayout({
   // Show loading spinner while checking auth
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-          <p className="text-slate-400 text-sm">Loading...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-foreground"></div>
+          <p className="text-muted-foreground text-sm">Loading...</p>
         </div>
       </div>
     );
@@ -48,9 +48,9 @@ export default function DashboardLayout({
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen w-full">
+      <div className="flex min-h-screen w-full bg-background">
         <AppSidebar />
-        <main className="flex-1 w-full overflow-hidden">
+        <main className="flex-1 w-full overflow-hidden bg-background">
           <div className="h-full w-full">
             {children}
           </div>
