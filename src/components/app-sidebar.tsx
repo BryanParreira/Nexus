@@ -70,7 +70,7 @@ const data = {
       title: "Planning & Management",
       items: [
         {
-          title: "Calendar",
+          title: "Social Media",
           url: "/dashboard/calendar",
           icon: RiCalendarLine,
         },
@@ -83,11 +83,6 @@ const data = {
           title: "Automation",
           url: "/dashboard/automation",
           icon: RiSettings3Line,
-        },
-        {
-          title: "Social Media",
-          url: "/dashboard/socialmedia",
-          icon: RiBarChart2Line,
         },
         {
           title: "CRM",
