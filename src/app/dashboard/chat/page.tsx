@@ -1,6 +1,5 @@
 // app/dashboard/chat/page.tsx
 "use client";
-
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,44 +10,77 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import {
-  SettingsPanelProvider,
-} from "@/components/settings-panel";
-import Chat from "@/components/chat";
+import { Button } from "@/components/ui/button";
+import { 
+  Plus,
+  Settings,
+  Search,
+} from 'lucide-react';
+import { useState } from "react";
+import ChatInterface from "@/components/chat-interface";
+import CreateGroupDialog from "@/components/create-group-dialog";
 
-export default function Page() {
+const ChatPage: React.FC = () => {
+  const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
+
   return (
-    <SettingsPanelProvider>
-      <div className="w-full h-screen flex flex-col">
-        {/* Simplified Header - Only navigation elements */}
-        <header className="flex flex-wrap gap-3 min-h-20 py-4 px-4 md:px-6 lg:px-8 shrink-0 items-center transition-all ease-linear border-b">
-          {/* Left side - Navigation only */}
-          <div className="flex flex-1 items-center gap-2">
-            <SidebarTrigger className="-ms-1" />
-            <div className="max-lg:hidden lg:contents">
-              <Separator
-                orientation="vertical"
-                className="me-2 data-[orientation=vertical]:h-4"
-              />
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator className="hidden md:block" />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage>Chat</BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
-            </div>
+    <div className="w-full h-full">
+      {/* Header */}
+      <header className="flex flex-wrap gap-3 min-h-20 py-4 px-4 md:px-6 lg:px-8 shrink-0 items-center transition-all ease-linear border-b">
+        {/* Left side */}
+        <div className="flex flex-1 items-center gap-2">
+          <SidebarTrigger className="-ms-1" />
+          <div className="max-lg:hidden lg:contents">
+            <Separator
+              orientation="vertical"
+              className="me-2 data-[orientation=vertical]:h-4"
+            />
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem className="hidden md:block">
+                  <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Chat</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
           </div>
-        </header>
-        
-        <div className="flex-1 w-full overflow-hidden">
-          <Chat />
         </div>
+        
+        {/* Right side */}
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm">
+            <Search className="w-4 h-4 mr-2" />
+            Search
+          </Button>
+          <Button variant="outline" size="sm">
+            <Settings className="w-4 h-4 mr-2" />
+            Settings
+          </Button>
+          <Button 
+            size="sm"
+            onClick={() => setIsCreateGroupOpen(true)}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            New Group
+          </Button>
+        </div>
+      </header>
+      
+      {/* Content area */}
+      <div className="h-[calc(100vh-5rem)] w-full">
+        <ChatInterface />
       </div>
-    </SettingsPanelProvider>
+
+      {/* Dialogs */}
+      <CreateGroupDialog 
+        open={isCreateGroupOpen} 
+        onOpenChange={setIsCreateGroupOpen}
+      />
+    </div>
   );
-}
+};
+
+export default ChatPage;

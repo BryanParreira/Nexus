@@ -26,6 +26,16 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Clock,
   Eye,
   Edit,
@@ -45,9 +55,14 @@ import {
   Calendar,
   Copy,
   Send,
+  CheckSquare,
+  Square,
+  Trash,
+  CalendarClock,
 } from "lucide-react";
 import type { SocialPost } from "@/types/social";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const mockPosts: SocialPost[] = [
   {
@@ -189,9 +204,33 @@ const statusConfig = {
 const SocialMediaFeed = () => {
   const [posts, setPosts] = useState<SocialPost[]>(mockPosts);
   const [view, setView] = useState<"table" | "grid">("table");
+  const [selectedPosts, setSelectedPosts] = useState<string[]>([]);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const handleDelete = (postId: string) => {
     setPosts(posts.filter((post) => post.id !== postId));
+  };
+
+  const handleBulkDelete = () => {
+    setPosts(posts.filter((post) => !selectedPosts.includes(post.id)));
+    setSelectedPosts([]);
+    setShowDeleteDialog(false);
+  };
+
+  const handleSelectAll = () => {
+    if (selectedPosts.length === posts.length) {
+      setSelectedPosts([]);
+    } else {
+      setSelectedPosts(posts.map((p) => p.id));
+    }
+  };
+
+  const handleSelectPost = (postId: string) => {
+    setSelectedPosts((prev) =>
+      prev.includes(postId)
+        ? prev.filter((id) => id !== postId)
+        : [...prev, postId]
+    );
   };
 
   const formatDateTime = (dateString: string) => {
@@ -290,7 +329,7 @@ const SocialMediaFeed = () => {
       </div>
 
       {/* Posts Management Table */}
-      <div className="p-4 md:p-6 lg:p-8">
+      <div className="p-4 md:p-6 lg:px-8">
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -318,12 +357,52 @@ const SocialMediaFeed = () => {
               </div>
             </div>
           </CardHeader>
+
+          {/* Bulk Actions Bar */}
+          {selectedPosts.length > 0 && (
+            <div className="px-6 py-3 bg-primary/5 border-y flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  checked={selectedPosts.length === posts.length}
+                  onCheckedChange={handleSelectAll}
+                />
+                <span className="text-sm font-medium">
+                  {selectedPosts.length} selected
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm">
+                  <CalendarClock className="w-4 h-4 mr-2" />
+                  Reschedule
+                </Button>
+                <Button variant="outline" size="sm">
+                  <Copy className="w-4 h-4 mr-2" />
+                  Duplicate
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => setShowDeleteDialog(true)}
+                >
+                  <Trash className="w-4 h-4 mr-2" />
+                  Delete
+                </Button>
+              </div>
+            </div>
+          )}
+
           <CardContent className="p-0">
             {view === "table" ? (
               <ScrollArea className="h-[calc(100vh-28rem)]">
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead className="w-[50px]">
+                        <Checkbox
+                          checked={selectedPosts.length === posts.length && posts.length > 0}
+                          onCheckedChange={handleSelectAll}
+                        />
+                      </TableHead>
                       <TableHead className="w-[50px]">Status</TableHead>
                       <TableHead>Content</TableHead>
                       <TableHead>Platforms</TableHead>
@@ -338,6 +417,12 @@ const SocialMediaFeed = () => {
                       const StatusIcon = statusConfig[post.status].icon;
                       return (
                         <TableRow key={post.id}>
+                          <TableCell>
+                            <Checkbox
+                              checked={selectedPosts.includes(post.id)}
+                              onCheckedChange={() => handleSelectPost(post.id)}
+                            />
+                          </TableCell>
                           <TableCell>
                             <Badge
                               variant="outline"
@@ -497,8 +582,20 @@ const SocialMediaFeed = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {posts.map((post) => {
                     const StatusIcon = statusConfig[post.status].icon;
+                    const isSelected = selectedPosts.includes(post.id);
+                    
                     return (
-                      <Card key={post.id} className="overflow-hidden">
+                      <Card 
+                        key={post.id} 
+                        className={`overflow-hidden relative ${isSelected ? 'ring-2 ring-primary' : ''}`}
+                      >
+                        <div className="absolute top-3 left-3 z-10">
+                          <Checkbox
+                            checked={isSelected}
+                            onCheckedChange={() => handleSelectPost(post.id)}
+                            className="bg-background"
+                          />
+                        </div>
                         <CardHeader className="pb-3">
                           <div className="flex items-start justify-between">
                             <Badge
@@ -522,6 +619,10 @@ const SocialMediaFeed = () => {
                                 <DropdownMenuItem>
                                   <Edit className="w-4 h-4 mr-2" />
                                   Edit
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                  <Copy className="w-4 h-4 mr-2" />
+                                  Duplicate
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                   className="text-destructive"
@@ -598,6 +699,24 @@ const SocialMediaFeed = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete {selectedPosts.length} posts?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the selected posts.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleBulkDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
