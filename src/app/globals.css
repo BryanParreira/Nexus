@@ -76,11 +76,11 @@
   --chart-5: #8b5cf6;              /* Purple */
   
   /* Sidebar colors - Claude style */
-  --sidebar: #ffffff;              /* White sidebar */
+  --sidebar: #f4f4f4;              /* White sidebar */
   --sidebar-foreground: #1f1f1f;   /* Dark grey text */
   --sidebar-primary: #6b46c5;      /* Purple active state */
   --sidebar-primary-foreground: #ffffff; /* White on purple */
-  --sidebar-accent: #f4f4f4;       /* Light grey hover */
+  --sidebar-accent: #ffffff;       /* Light grey hover */
   --sidebar-accent-foreground: #1f1f1f; /* Dark text on hover */
   --sidebar-border: #e8e8e8;       /* Light border */
   --sidebar-ring: #6b46c5;         /* Purple focus */
@@ -88,7 +88,7 @@
 
 .dark {
   /* DARK GREY THEME - Your preferred dark mode */
-  --background: #0a0a0a;           /* Very dark background (main content) */
+  --background: #1a1a1a;           /* Very dark background (main content) */
   --foreground: #ffffff;           /* Pure white text */
   --card: #1a1a1a;                 /* Dark grey for cards */
   --card-foreground: #ffffff;      /* White text on cards */

@@ -238,7 +238,7 @@ const actionIcons = {
   like: Heart,
   comment: MessageSquare,
   follow: Bell,
-  notify: Bell,
+  notify: Bot,
 };
 
 const platformIcons = {
@@ -275,50 +275,57 @@ const AutomationList = () => {
 
   const handleToggleStatus = (id: string) => {
     setAutomations(
-      automations.map((auto) =>
-        auto.id === id
+      automations.map((automation) =>
+        automation.id === id
           ? {
-              ...auto,
-              status: auto.status === "active" ? "paused" : "active",
+              ...automation,
+              status:
+                automation.status === "active"
+                  ? ("paused" as AutomationStatus)
+                  : ("active" as AutomationStatus),
             }
-          : auto
+          : automation
       )
     );
   };
 
   const handleDelete = (id: string) => {
-    setAutomations(automations.filter((auto) => auto.id !== id));
+    setAutomations(automations.filter((a) => a.id !== id));
   };
 
   const formatDateTime = (dateString: string) => {
     if (dateString === "Real-time") return dateString;
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat("en-US", {
+    return new Date(dateString).toLocaleString("en-US", {
       month: "short",
       day: "numeric",
       hour: "numeric",
       minute: "2-digit",
-    }).format(date);
+    });
   };
 
   const getStats = () => {
-    const active = automations.filter((a) => a.status === "active").length;
-    const paused = automations.filter((a) => a.status === "paused").length;
+    const totalAutomations = automations.length;
+    const activeAutomations = automations.filter((a) => a.status === "active").length;
     const totalRuns = automations.reduce((acc, a) => acc + a.runsCount, 0);
     const avgSuccessRate =
       automations.reduce((acc, a) => acc + a.successRate, 0) / automations.length;
 
-    return { active, paused, totalRuns, avgSuccessRate };
+    return {
+      totalAutomations,
+      activeAutomations,
+      totalRuns,
+      avgSuccessRate,
+    };
   };
 
   const stats = getStats();
 
   return (
-    <div className="w-full">
-      {/* Analytics Overview */}
-      <div className="px-4 md:px-6 lg:px-8 pt-6 pb-4 border-b bg-muted/30">
+    <div>
+      {/* Stats Overview - With Gradient */}
+      <div className="p-4 md:p-6 lg:p-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card>
+          <Card className="from-primary/5 to-card dark:bg-card bg-gradient-to-t shadow-xs">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-muted-foreground">
@@ -328,35 +335,36 @@ const AutomationList = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{automations.length}</div>
+              <div className="text-2xl font-bold">{stats.totalAutomations}</div>
               <p className="text-xs text-muted-foreground mt-1">
-                {stats.active} active, {stats.paused} paused
+                Workflows configured
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="from-primary/5 to-card dark:bg-card bg-gradient-to-t shadow-xs">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-muted-foreground">
-                  Active Automations
+                  Active Now
                 </p>
                 <Activity className="w-4 h-4 text-muted-foreground" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.active}</div>
+              <div className="text-2xl font-bold">{stats.activeAutomations}</div>
               <p className="text-xs text-green-600 dark:text-green-400 mt-1">
-                Running in real-time
+                <TrendingUp className="w-3 h-3 inline mr-1" />
+                {((stats.activeAutomations / stats.totalAutomations) * 100).toFixed(0)}% active
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="from-primary/5 to-card dark:bg-card bg-gradient-to-t shadow-xs">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-muted-foreground">
-                  Total Executions
+                  Total Runs
                 </p>
                 <CheckCircle2 className="w-4 h-4 text-muted-foreground" />
               </div>
@@ -365,11 +373,13 @@ const AutomationList = () => {
               <div className="text-2xl font-bold">
                 {stats.totalRuns.toLocaleString()}
               </div>
-              <p className="text-xs text-muted-foreground mt-1">All time runs</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Successful executions
+              </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="from-primary/5 to-card dark:bg-card bg-gradient-to-t shadow-xs">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-muted-foreground">
@@ -392,7 +402,7 @@ const AutomationList = () => {
 
       {/* Automations Table */}
       <div className="p-4 md:p-6 lg:p-8">
-        <Card>
+        <Card className="from-primary/5 to-card dark:bg-card bg-gradient-to-t shadow-xs">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>

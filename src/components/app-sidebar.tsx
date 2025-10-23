@@ -76,7 +76,7 @@ const data = {
           icon: FolderKanban,
         },
         {
-          title: "CRM",
+          title: "Costumers",
           url: "/dashboard/crm",
           icon: Building2,
         }

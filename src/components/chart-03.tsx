@@ -46,7 +46,7 @@ export function Chart03() {
   const lastMonth = chartData[chartData.length - 1]?.month as string;
 
   return (
-    <Card className="gap-4">
+    <Card className="from-primary/5 to-card dark:bg-card bg-gradient-to-t shadow-xs gap-4">
       <CardHeader>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="space-y-0.5">

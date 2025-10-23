@@ -415,45 +415,6 @@ export function NavUser({
                   </DropdownMenuItem>
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
-
-              {/* Billing */}
-              <DropdownMenuSub>
-                <DropdownMenuSubTrigger className="gap-3 focus:bg-sidebar-accent cursor-pointer p-3">
-                  <div className="flex items-center justify-between w-full">
-                    <div className="flex items-center gap-3">
-                      <RiNoCreditCardLine size={20} className="size-5 text-muted-foreground/80" />
-                      <span>Billing</span>
-                    </div>
-                    <span className="text-xs text-muted-foreground hidden sm:inline">
-                      Pro
-                    </span>
-                  </div>
-                </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent className="w-56">
-                  <DropdownMenuItem onClick={() => handleBillingAction('view-plan')}>
-                    <div>
-                      <span className="font-medium">Current Plan</span>
-                      <p className="text-xs text-muted-foreground">{currentPlan} - $29/month</p>
-                    </div>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <ChangePlanDialog>
-                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                      <span>Change Plan</span>
-                    </DropdownMenuItem>
-                  </ChangePlanDialog>
-                  <DropdownMenuItem onClick={() => handleBillingAction('billing-history')}>
-                    <span>Billing History</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handleBillingAction('payment-method')}>
-                    <span>Payment Method</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => handleBillingAction('cancel')} className="text-red-600">
-                    <span>Cancel Subscription</span>
-                  </DropdownMenuItem>
-                </DropdownMenuSubContent>
-              </DropdownMenuSub>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             {/* Logout */}

@@ -208,21 +208,13 @@ const SocialMediaFeed = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const handleDelete = (postId: string) => {
-    setPosts(posts.filter((post) => post.id !== postId));
+    setPosts(posts.filter((p) => p.id !== postId));
   };
 
   const handleBulkDelete = () => {
-    setPosts(posts.filter((post) => !selectedPosts.includes(post.id)));
+    setPosts(posts.filter((p) => !selectedPosts.includes(p.id)));
     setSelectedPosts([]);
     setShowDeleteDialog(false);
-  };
-
-  const handleSelectAll = () => {
-    if (selectedPosts.length === posts.length) {
-      setSelectedPosts([]);
-    } else {
-      setSelectedPosts(posts.map((p) => p.id));
-    }
   };
 
   const handleSelectPost = (postId: string) => {
@@ -233,164 +225,140 @@ const SocialMediaFeed = () => {
     );
   };
 
-  const formatDateTime = (dateString: string) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-    }).format(date);
+  const handleSelectAll = () => {
+    if (selectedPosts.length === posts.length) {
+      setSelectedPosts([]);
+    } else {
+      setSelectedPosts(posts.map((p) => p.id));
+    }
   };
 
-  const getMetricsSummary = () => {
-    const published = posts.filter((p) => p.status === "published" && p.metrics);
-    const totalImpressions = published.reduce((acc, p) => acc + (p.metrics?.impressions || 0), 0);
-    const totalEngagement = published.reduce((acc, p) => acc + (p.metrics?.engagement || 0), 0);
-    const totalClicks = published.reduce((acc, p) => acc + (p.metrics?.clicks || 0), 0);
-    
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  };
+
+  const getStats = () => {
+    const totalPosts = posts.length;
+    const scheduled = posts.filter((p) => p.status === "scheduled").length;
+    const published = posts.filter((p) => p.status === "published").length;
+    const totalEngagement = posts.reduce((acc, p) => acc + (p.metrics?.engagement || 0), 0);
+    const totalImpressions = posts.reduce((acc, p) => acc + (p.metrics?.impressions || 0), 0);
+    const engagementRate = totalImpressions > 0 ? ((totalEngagement / totalImpressions) * 100).toFixed(1) : "0";
+
     return {
-      impressions: totalImpressions,
-      engagement: totalEngagement,
-      clicks: totalClicks,
-      engagementRate: totalImpressions > 0 ? ((totalEngagement / totalImpressions) * 100).toFixed(2) : "0.00",
+      totalPosts,
+      scheduled,
+      published,
+      totalEngagement,
+      totalImpressions,
+      engagementRate,
     };
   };
 
-  const metrics = getMetricsSummary();
+  const stats = getStats();
 
   return (
-    <div className="w-full">
-      {/* Analytics Overview */}
-      <div className="px-4 md:px-6 lg:px-8 pt-6 pb-4 border-b bg-muted/30">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card>
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-muted-foreground">Total Posts</p>
-                <BarChart3 className="w-4 h-4 text-muted-foreground" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{posts.length}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                {posts.filter((p) => p.status === "scheduled").length} scheduled
-              </p>
-            </CardContent>
-          </Card>
+    <div className="p-4 md:p-6 space-y-6">
+      {/* Stats Overview - With Gradient */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="from-primary/5 to-card dark:bg-card bg-gradient-to-t shadow-xs">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium text-muted-foreground">Total Posts</p>
+              <BarChart3 className="w-4 h-4 text-muted-foreground" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalPosts}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              {stats.scheduled} scheduled, {stats.published} published
+            </p>
+          </CardContent>
+        </Card>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-muted-foreground">Impressions</p>
-                <Eye className="w-4 h-4 text-muted-foreground" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{metrics.impressions.toLocaleString()}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                From published posts
-              </p>
-            </CardContent>
-          </Card>
+        <Card className="from-primary/5 to-card dark:bg-card bg-gradient-to-t shadow-xs">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium text-muted-foreground">Total Engagement</p>
+              <Users className="w-4 h-4 text-muted-foreground" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalEngagement.toLocaleString()}</div>
+            <p className="text-xs text-green-600 dark:text-green-400 mt-1 flex items-center gap-1">
+              <TrendingUp className="w-3 h-3" />
+              {stats.engagementRate}% engagement rate
+            </p>
+          </CardContent>
+        </Card>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-muted-foreground">Engagement</p>
-                <Users className="w-4 h-4 text-muted-foreground" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{metrics.engagement.toLocaleString()}</div>
-              <p className="text-xs text-green-600 dark:text-green-400 mt-1 flex items-center gap-1">
-                <TrendingUp className="w-3 h-3" />
-                {metrics.engagementRate}% rate
-              </p>
-            </CardContent>
-          </Card>
+        <Card className="from-primary/5 to-card dark:bg-card bg-gradient-to-t shadow-xs">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium text-muted-foreground">Impressions</p>
+              <Eye className="w-4 h-4 text-muted-foreground" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalImpressions.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Total reach across platforms
+            </p>
+          </CardContent>
+        </Card>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-muted-foreground">Clicks</p>
-                <MousePointerClick className="w-4 h-4 text-muted-foreground" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{metrics.clicks.toLocaleString()}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Total link clicks
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+        <Card className="from-primary/5 to-card dark:bg-card bg-gradient-to-t shadow-xs">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium text-muted-foreground">Scheduled</p>
+              <CalendarClock className="w-4 h-4 text-muted-foreground" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.scheduled}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Posts ready to publish
+            </p>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Posts Management Table */}
-      <div className="p-4 md:p-6 lg:px-8">
-        <Card>
-          <CardHeader>
+      {/* Posts Table/Grid */}
+      <div>
+        <Card className="from-primary/5 to-card dark:bg-card bg-gradient-to-t shadow-xs">
+          <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-semibold">Content Management</h3>
+                <h2 className="text-lg font-semibold">Social Media Posts</h2>
                 <p className="text-sm text-muted-foreground">
-                  Manage and track all your social media posts
+                  Manage and track your social media content
                 </p>
               </div>
-              <div className="flex gap-2">
-                <Button
-                  variant={view === "table" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setView("table")}
-                >
-                  Table View
-                </Button>
-                <Button
-                  variant={view === "grid" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setView("grid")}
-                >
-                  Grid View
-                </Button>
+              <div className="flex items-center gap-2">
+                {selectedPosts.length > 0 && (
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => setShowDeleteDialog(true)}
+                  >
+                    <Trash className="w-4 h-4 mr-2" />
+                    Delete ({selectedPosts.length})
+                  </Button>
+                )}
+                <Tabs value={view} onValueChange={(v) => setView(v as "table" | "grid")}>
+                  <TabsList>
+                    <TabsTrigger value="table">Table</TabsTrigger>
+                    <TabsTrigger value="grid">Grid</TabsTrigger>
+                  </TabsList>
+                </Tabs>
               </div>
             </div>
           </CardHeader>
-
-          {/* Bulk Actions Bar */}
-          {selectedPosts.length > 0 && (
-            <div className="px-6 py-3 bg-primary/5 border-y flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  checked={selectedPosts.length === posts.length}
-                  onCheckedChange={handleSelectAll}
-                />
-                <span className="text-sm font-medium">
-                  {selectedPosts.length} selected
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm">
-                  <CalendarClock className="w-4 h-4 mr-2" />
-                  Reschedule
-                </Button>
-                <Button variant="outline" size="sm">
-                  <Copy className="w-4 h-4 mr-2" />
-                  Duplicate
-                </Button>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => setShowDeleteDialog(true)}
-                >
-                  <Trash className="w-4 h-4 mr-2" />
-                  Delete
-                </Button>
-              </div>
-            </div>
-          )}
-
           <CardContent className="p-0">
             {view === "table" ? (
               <ScrollArea className="h-[calc(100vh-28rem)]">
@@ -399,41 +367,34 @@ const SocialMediaFeed = () => {
                     <TableRow>
                       <TableHead className="w-[50px]">
                         <Checkbox
-                          checked={selectedPosts.length === posts.length && posts.length > 0}
+                          checked={selectedPosts.length === posts.length}
                           onCheckedChange={handleSelectAll}
                         />
                       </TableHead>
-                      <TableHead className="w-[50px]">Status</TableHead>
                       <TableHead>Content</TableHead>
                       <TableHead>Platforms</TableHead>
-                      <TableHead>Schedule</TableHead>
-                      <TableHead className="text-right">Performance</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Schedule/Published</TableHead>
+                      <TableHead>Metrics</TableHead>
                       <TableHead>Author</TableHead>
-                      <TableHead className="w-[100px]">Actions</TableHead>
+                      <TableHead className="w-[50px]"></TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {posts.map((post) => {
                       const StatusIcon = statusConfig[post.status].icon;
+                      const isSelected = selectedPosts.includes(post.id);
+                      
                       return (
-                        <TableRow key={post.id}>
+                        <TableRow key={post.id} className={isSelected ? "bg-muted/50" : ""}>
                           <TableCell>
                             <Checkbox
-                              checked={selectedPosts.includes(post.id)}
+                              checked={isSelected}
                               onCheckedChange={() => handleSelectPost(post.id)}
                             />
                           </TableCell>
                           <TableCell>
-                            <Badge
-                              variant="outline"
-                              className={statusConfig[post.status].color}
-                            >
-                              <StatusIcon className="w-3 h-3 mr-1" />
-                              {statusConfig[post.status].label}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="max-w-xs">
-                            <div className="flex items-start gap-3">
+                            <div className="flex items-start gap-3 max-w-md">
                               {post.image && (
                                 <img
                                   src={post.image}
@@ -451,8 +412,7 @@ const SocialMediaFeed = () => {
                                 return (
                                   <div
                                     key={platform}
-                                    className="p-1.5 rounded border bg-background"
-                                    title={platform}
+                                    className="p-1 rounded border"
                                   >
                                     <Icon
                                       className={`w-3.5 h-3.5 ${platformColors[platform]}`}
@@ -463,48 +423,44 @@ const SocialMediaFeed = () => {
                             </div>
                           </TableCell>
                           <TableCell>
-                            <div className="flex items-center gap-2 text-sm">
-                              {post.scheduledFor ? (
-                                <>
-                                  <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
-                                  <span className="text-xs">
-                                    {formatDateTime(post.scheduledFor)}
-                                  </span>
-                                </>
-                              ) : post.publishedAt ? (
-                                <>
-                                  <CheckCircle2 className="w-3.5 h-3.5 text-green-600" />
-                                  <span className="text-xs">
-                                    {formatDateTime(post.publishedAt)}
-                                  </span>
-                                </>
-                              ) : (
-                                <span className="text-xs text-muted-foreground">
-                                  Not scheduled
-                                </span>
+                            <Badge
+                              variant="outline"
+                              className={statusConfig[post.status].color}
+                            >
+                              <StatusIcon className="w-3 h-3 mr-1" />
+                              {statusConfig[post.status].label}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="text-sm">
+                              {post.scheduledFor && (
+                                <div className="flex items-center gap-1 text-muted-foreground">
+                                  <Clock className="w-3 h-3" />
+                                  {formatDate(post.scheduledFor)}
+                                </div>
+                              )}
+                              {post.publishedAt && (
+                                <div className="flex items-center gap-1 text-muted-foreground">
+                                  <CheckCircle2 className="w-3 h-3" />
+                                  {formatDate(post.publishedAt)}
+                                </div>
                               )}
                             </div>
                           </TableCell>
-                          <TableCell className="text-right">
+                          <TableCell>
                             {post.metrics ? (
-                              <div className="text-xs space-y-1">
-                                <div className="flex justify-end items-center gap-1">
-                                  <Eye className="w-3 h-3 text-muted-foreground" />
-                                  <span>{post.metrics.impressions.toLocaleString()}</span>
+                              <div className="flex flex-col gap-1 text-xs">
+                                <div className="flex items-center gap-1">
+                                  <Eye className="w-3 h-3" />
+                                  {post.metrics.impressions.toLocaleString()}
                                 </div>
-                                <div className="flex justify-end items-center gap-1">
-                                  <Users className="w-3 h-3 text-muted-foreground" />
-                                  <span>{post.metrics.engagement.toLocaleString()}</span>
-                                </div>
-                                <div className="flex justify-end items-center gap-1">
-                                  <MousePointerClick className="w-3 h-3 text-muted-foreground" />
-                                  <span>{post.metrics.clicks.toLocaleString()}</span>
+                                <div className="flex items-center gap-1">
+                                  <Users className="w-3 h-3" />
+                                  {post.metrics.engagement.toLocaleString()}
                                 </div>
                               </div>
                             ) : (
-                              <span className="text-xs text-muted-foreground">
-                                No data
-                              </span>
+                              <span className="text-xs text-muted-foreground">-</span>
                             )}
                           </TableCell>
                           <TableCell>
@@ -587,7 +543,7 @@ const SocialMediaFeed = () => {
                     return (
                       <Card 
                         key={post.id} 
-                        className={`overflow-hidden relative ${isSelected ? 'ring-2 ring-primary' : ''}`}
+                        className={`from-primary/5 to-card dark:bg-card bg-gradient-to-t shadow-xs overflow-hidden relative ${isSelected ? 'ring-2 ring-primary' : ''}`}
                       >
                         <div className="absolute top-3 left-3 z-10">
                           <Checkbox

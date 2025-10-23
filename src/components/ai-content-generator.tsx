@@ -128,10 +128,10 @@ const AIContentGenerator = () => {
 
   return (
     <div className="w-full">
-      {/* Stats/Info Bar */}
+      {/* Stats/Info Bar - With Gradient */}
       <div className="px-4 md:px-6 lg:px-8 pt-6 pb-4 border-b bg-muted/30">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card>
+          <Card className="from-primary/5 to-card dark:bg-card bg-gradient-to-t shadow-xs">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-muted-foreground">Generations Used</p>
@@ -144,7 +144,7 @@ const AIContentGenerator = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="from-primary/5 to-card dark:bg-card bg-gradient-to-t shadow-xs">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-muted-foreground">This Month</p>
@@ -159,7 +159,7 @@ const AIContentGenerator = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="from-primary/5 to-card dark:bg-card bg-gradient-to-t shadow-xs">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-muted-foreground">Saved Templates</p>
@@ -172,7 +172,7 @@ const AIContentGenerator = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="from-primary/5 to-card dark:bg-card bg-gradient-to-t shadow-xs">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-muted-foreground">Posts Created</p>
@@ -191,135 +191,98 @@ const AIContentGenerator = () => {
       <div className="p-4 md:p-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Input Section */}
-          <Card>
+          <Card className="from-primary/5 to-card dark:bg-card bg-gradient-to-t shadow-xs">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Wand2 className="w-5 h-5" />
-                AI Content Generator
-              </CardTitle>
+              <CardTitle>Generate Content</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Generation Mode */}
-              <Tabs value={generationMode} onValueChange={(v) => setGenerationMode(v as any)}>
-                <TabsList className="grid w-full grid-cols-4">
-                  <TabsTrigger value="topic" className="text-xs">
-                    <Hash className="w-3 h-3 mr-1" />
-                    Topic
-                  </TabsTrigger>
-                  <TabsTrigger value="url" className="text-xs">
-                    <LinkIcon className="w-3 h-3 mr-1" />
-                    URL
-                  </TabsTrigger>
-                  <TabsTrigger value="improve" className="text-xs">
-                    <Zap className="w-3 h-3 mr-1" />
-                    Improve
-                  </TabsTrigger>
-                  <TabsTrigger value="image" className="text-xs">
-                    <ImageIcon className="w-3 h-3 mr-1" />
-                    Image
-                  </TabsTrigger>
-                </TabsList>
+              {/* Generation Mode Tabs */}
+              <div>
+                <Label>Generation Mode</Label>
+                <Tabs value={generationMode} onValueChange={(v) => setGenerationMode(v as any)} className="mt-2">
+                  <TabsList className="grid w-full grid-cols-4">
+                    <TabsTrigger value="topic">
+                      <Wand2 className="w-4 h-4 mr-2" />
+                      Topic
+                    </TabsTrigger>
+                    <TabsTrigger value="url">
+                      <LinkIcon className="w-4 h-4 mr-2" />
+                      URL
+                    </TabsTrigger>
+                    <TabsTrigger value="improve">
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      Improve
+                    </TabsTrigger>
+                    <TabsTrigger value="image">
+                      <ImageIcon className="w-4 h-4 mr-2" />
+                      Image
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
+              </div>
 
-                <TabsContent value="topic" className="space-y-4 mt-4">
-                  <div className="space-y-2">
-                    <Label>What's your post about?</Label>
-                    <Textarea
-                      placeholder="e.g., AI technology transforming businesses, tips for productivity, celebrating a milestone..."
-                      value={inputText}
-                      onChange={(e) => setInputText(e.target.value)}
-                      className="min-h-[100px]"
-                    />
-                    <p className="text-xs text-muted-foreground">
-                      Describe your topic, and AI will create engaging content for you
-                    </p>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="url" className="space-y-4 mt-4">
-                  <div className="space-y-2">
-                    <Label>Paste URL to generate content from</Label>
-                    <Input
-                      placeholder="https://example.com/article"
-                      value={inputText}
-                      onChange={(e) => setInputText(e.target.value)}
-                    />
-                    <p className="text-xs text-muted-foreground">
-                      AI will analyze the URL and create social media posts
-                    </p>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="improve" className="space-y-4 mt-4">
-                  <div className="space-y-2">
-                    <Label>Paste your content to improve</Label>
-                    <Textarea
-                      placeholder="Paste your existing content here and AI will make it better..."
-                      value={inputText}
-                      onChange={(e) => setInputText(e.target.value)}
-                      className="min-h-[100px]"
-                    />
-                    <p className="text-xs text-muted-foreground">
-                      AI will enhance your content with better wording, structure, and engagement
-                    </p>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="image" className="space-y-4 mt-4">
-                  <div className="space-y-2">
-                    <Label>Describe the image you want</Label>
-                    <Textarea
-                      placeholder="e.g., A professional business team collaborating in a modern office, vibrant colors..."
-                      value={inputText}
-                      onChange={(e) => setInputText(e.target.value)}
-                      className="min-h-[100px]"
-                    />
-                    <p className="text-xs text-muted-foreground">
-                      AI will generate an image and create a caption to go with it
-                    </p>
-                  </div>
-                </TabsContent>
-              </Tabs>
+              {/* Input Field */}
+              <div>
+                <Label htmlFor="content-input">
+                  {generationMode === "topic" && "What topic would you like to write about?"}
+                  {generationMode === "url" && "Enter URL to generate content from"}
+                  {generationMode === "improve" && "Paste content to improve"}
+                  {generationMode === "image" && "Describe the image or upload"}
+                </Label>
+                <Textarea
+                  id="content-input"
+                  placeholder={
+                    generationMode === "topic"
+                      ? "e.g., AI in marketing, sustainable business practices..."
+                      : generationMode === "url"
+                      ? "https://example.com/article"
+                      : generationMode === "improve"
+                      ? "Paste your existing content here..."
+                      : "Describe the image content..."
+                  }
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  rows={4}
+                  className="mt-2"
+                />
+              </div>
 
               {/* Platform Selection */}
-              <div className="space-y-3">
+              <div>
                 <Label>Target Platform</Label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-4 gap-2 mt-2">
                   {platforms.map((p) => {
                     const Icon = p.icon;
                     return (
-                      <div
+                      <Button
                         key={p.id}
+                        variant={platform === p.id ? "default" : "outline"}
+                        className="h-auto py-3"
                         onClick={() => setPlatform(p.id)}
-                        className={`flex items-center gap-2 p-3 rounded-lg border-2 cursor-pointer transition-all ${
-                          platform === p.id
-                            ? "border-primary bg-primary/5"
-                            : "border-border hover:border-primary/50"
-                        }`}
                       >
-                        <Icon className={`w-5 h-5 ${p.color}`} />
-                        <div className="flex-1">
-                          <p className="font-medium text-sm">{p.name}</p>
-                          <p className="text-xs text-muted-foreground">{p.limit} chars</p>
+                        <div className="flex flex-col items-center gap-1">
+                          <Icon className={`w-5 h-5 ${platform === p.id ? '' : p.color}`} />
+                          <span className="text-xs">{p.name}</span>
                         </div>
-                      </div>
+                      </Button>
                     );
                   })}
                 </div>
               </div>
 
               {/* Tone Selection */}
-              <div className="space-y-3">
-                <Label>Tone & Style</Label>
+              <div>
+                <Label htmlFor="tone">Tone</Label>
                 <Select value={tone} onValueChange={setTone}>
-                  <SelectTrigger>
+                  <SelectTrigger id="tone" className="mt-2">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     {tones.map((t) => (
                       <SelectItem key={t.id} value={t.id}>
-                        <div className="flex flex-col">
-                          <span className="font-medium">{t.name}</span>
-                          <span className="text-xs text-muted-foreground">{t.description}</span>
+                        <div>
+                          <div className="font-medium">{t.name}</div>
+                          <div className="text-xs text-muted-foreground">{t.description}</div>
                         </div>
                       </SelectItem>
                     ))}
@@ -327,21 +290,18 @@ const AIContentGenerator = () => {
                 </Select>
               </div>
 
-              {/* Length Slider */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <Label>Content Length</Label>
-                  <span className="text-sm text-muted-foreground">{length[0]}%</span>
-                </div>
+              {/* Content Length */}
+              <div>
+                <Label>Content Length: {length}%</Label>
                 <Slider
                   value={length}
                   onValueChange={setLength}
-                  min={25}
+                  min={0}
                   max={100}
-                  step={25}
-                  className="w-full"
+                  step={10}
+                  className="mt-2"
                 />
-                <div className="flex justify-between text-xs text-muted-foreground">
+                <div className="flex justify-between text-xs text-muted-foreground mt-1">
                   <span>Short</span>
                   <span>Medium</span>
                   <span>Long</span>
@@ -350,36 +310,37 @@ const AIContentGenerator = () => {
 
               {/* Options */}
               <div className="space-y-3">
-                <Label>Additional Options</Label>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Hash className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm">Include Hashtags</span>
-                    </div>
-                    <Switch checked={includeHashtags} onCheckedChange={setIncludeHashtags} />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Smile className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm">Include Emojis</span>
-                    </div>
-                    <Switch checked={includeEmojis} onCheckedChange={setIncludeEmojis} />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <AtSign className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm">Include Call-to-Action</span>
-                    </div>
-                    <Switch checked={includeCTA} onCheckedChange={setIncludeCTA} />
-                  </div>
+                <Label>Options</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="hashtags" className="cursor-pointer">Include Hashtags</Label>
+                  <Switch
+                    id="hashtags"
+                    checked={includeHashtags}
+                    onCheckedChange={setIncludeHashtags}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="emojis" className="cursor-pointer">Include Emojis</Label>
+                  <Switch
+                    id="emojis"
+                    checked={includeEmojis}
+                    onCheckedChange={setIncludeEmojis}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="cta" className="cursor-pointer">Include Call-to-Action</Label>
+                  <Switch
+                    id="cta"
+                    checked={includeCTA}
+                    onCheckedChange={setIncludeCTA}
+                  />
                 </div>
               </div>
 
               {/* Generate Button */}
               <Button
                 onClick={handleGenerate}
-                disabled={!inputText.trim() || isGenerating}
+                disabled={isGenerating || !inputText.trim()}
                 className="w-full"
                 size="lg"
               >
@@ -399,7 +360,7 @@ const AIContentGenerator = () => {
           </Card>
 
           {/* Output Section */}
-          <Card>
+          <Card className="from-primary/5 to-card dark:bg-card bg-gradient-to-t shadow-xs">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Generated Content</CardTitle>
@@ -531,7 +492,7 @@ const AIContentGenerator = () => {
         </div>
 
         {/* Templates Section */}
-        <Card className="mt-6">
+        <Card className="from-primary/5 to-card dark:bg-card bg-gradient-to-t shadow-xs mt-6">
           <CardHeader>
             <CardTitle>Popular Templates</CardTitle>
           </CardHeader>
@@ -547,7 +508,7 @@ const AIContentGenerator = () => {
               ].map((template) => {
                 const Icon = template.icon;
                 return (
-                  <Card key={template.name} className="cursor-pointer hover:shadow-md transition-shadow">
+                  <Card key={template.name} className="cursor-pointer hover:shadow-md transition-shadow from-primary/5 to-card dark:bg-card bg-gradient-to-t">
                     <CardContent className="pt-6">
                       <div className="flex items-start gap-3">
                         <div className="p-2 rounded-lg bg-primary/10">

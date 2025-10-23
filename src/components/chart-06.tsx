@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 
 export function Chart06() {
   return (
-    <Card className="gap-5">
+    <Card className="from-primary/5 to-card dark:bg-card bg-gradient-to-t shadow-xs gap-5">
       <CardHeader>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="space-y-0.5">
