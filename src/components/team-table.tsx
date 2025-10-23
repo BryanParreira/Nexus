@@ -645,3 +645,5 @@ function RowActions({
     </>
   );
 }
+
+export default TeamTable
